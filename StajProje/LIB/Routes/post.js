@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {createPost, getPostById, getRandomPostByCount, getPostByTitle} = require('../Controllers/post');
+const {createPost, getPostById, getRandomPostByCount, getPostByTitle, interactWithPost} = require('../Controllers/post');
 
 //! Create a post
 router.post('/create/:title/:content/:ownerId', async (req, res, next) => {
@@ -75,5 +75,25 @@ router.get('/getPostByTitle/:title/:limit', async (req, res, next) => {
             message: 'Post retrieval failed',
         });
 }});
+
+//! Post interaction to post (like, dislike)
+router.post('/interaction/:postId/:ownerId/:type', async (req, res, next) => {
+    console.log('an attempt to interact with a post was made');
+    const {postId, ownerId, type} = req.params;
+    var result = await interactWithPost(postId, ownerId, type);
+    console.log(result);
+    if (result.success) {
+        res.status(200).json({
+            message: 'Post interaction successful',
+            interactionType: result.interactionType,
+            interactions: result.interactions,
+        });
+    }
+    else {
+        res.status(500).json({
+            message: 'Post interaction failed',
+        });
+    }
+});
 
 module.exports = router;

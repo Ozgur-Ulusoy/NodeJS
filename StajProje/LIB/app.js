@@ -22,11 +22,11 @@ app.use((req, res, next) => { //* set headers to allow CORS
 //* Routes
 // const userRoutes = require('./API/Routes/user');
 const postRoutes = require('./Routes/post');
-// const commentRoutes = require('./API/Routes/comment');
+const commentRoutes = require('./Routes/comment');
 
 // app.use('api/user', userRoutes); //* handle requests to /user
 app.use('/api/post', postRoutes); //* handle requests to /post
-// app.use('api/comment', commentRoutes); //* handle requests to /comment
+app.use('/api/comment', commentRoutes); //* handle requests to /comment
 
 //* Error Handling
 app.use((req, res, next) => { 

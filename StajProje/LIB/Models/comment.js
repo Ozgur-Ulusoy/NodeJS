@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const CommentSchema = mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId, //! ID is automatically created by MongoDB - ID OF COMMENT
     content: { //! CONTENT OF COMMENT - ITS USER'S COMMENT
         type: String,
         required: true,
@@ -24,7 +23,14 @@ const CommentSchema = mongoose.Schema({
             type: Array,
             default: [],
             },
-        }
+        },
+    replies: { //! REPLIES OF COMMENT
+        type: Array,
+        default: [],
+        // minimalize : true,
+        // $unset: { $cond: { if: { $eq: [ "$replies", null ] }, then: "$$PRUNE", else: "$$KEEP" }
+        // }
+    },
 });
 
 const Comment = mongoose.model('Comment', CommentSchema); 

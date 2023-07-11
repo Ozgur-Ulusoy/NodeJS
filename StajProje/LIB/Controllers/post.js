@@ -38,9 +38,69 @@ const getPostByTitle = async (title, limit = 5) => {
     return posts;
 }
 
+const interactWithPost = async (postId, userId, interaction) => {
+    var post = await dbClient.db('DB').collection('Posts').findOne({_id: new mongoose.Types.ObjectId(postId)});
+    var interactions = post['interactions'];
+
+    var likedArr = interactions['likes'] ;
+    var dislikedArr = interactions['dislikes'] ;
+
+    if(interaction === 'like') {
+        var hasLiked = likedArr.includes(userId);
+        var hasDisliked = dislikedArr.includes(userId);
+
+        if(hasLiked) {
+            // remove like
+            likedArr.splice(likedArr.indexOf(userId), 1);
+        }
+        else {
+            // add like
+            likedArr.push(userId);
+            // remove dislike
+            if(hasDisliked) {
+                dislikedArr.splice(dislikedArr.indexOf(userId), 1);
+            }
+        }
+    }
+    else {
+        var hasDisliked = dislikedArr.includes(userId);
+        var hasLiked = likedArr.includes(userId);
+
+        if(hasDisliked) {
+            // remove dislike
+            dislikedArr.splice(dislikedArr.indexOf(userId), 1);
+        }
+        else {
+            // add dislike
+            dislikedArr.push(userId);
+            // remove like
+            if(hasLiked) {
+                likedArr.splice(likedArr.indexOf(userId), 1);
+            }
+        }
+    }
+
+    var newInteractions = {
+        likes: likedArr,
+        dislikes: dislikedArr,
+    };
+
+    // update post
+    var res = await dbClient.db('DB').collection('Posts').updateOne({_id: new mongoose.Types.ObjectId(postId)}, {$set: {interactions: newInteractions}}).then((val) => {
+        return val.acknowledged;
+    });
+
+    return {
+        success: res,
+        // interactionType: interactionType,
+        interactions: newInteractions,
+    };
+};
+
 module.exports = {
     createPost,
     getPostById,
     getRandomPostByCount,
     getPostByTitle,
+    interactWithPost,
 };
