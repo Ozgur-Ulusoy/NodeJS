@@ -12,7 +12,15 @@ const UserSchema = mongoose.Schema({
         minlength: 6,
         required: true,
         },
-}); 
+    token: { //! TOKEN OF USER
+        type: String,
+        required: false,
+    },
+}, {
+    collection : 'Users'
+},
+); 
 
-const User = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema, 'Users');
+
 module.exports = User;

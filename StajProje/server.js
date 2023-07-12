@@ -7,7 +7,7 @@ const dbClient = require('./LIB/db');
 //! SERVER CONNECTION
 const server = http.createServer(app);
 server.listen(port, async () => {
-    await dbClient.connect(); //! WHEN SERVER IS STARTED, CONNECT TO DB FIRST
+    // await dbClient.connect(); //! WHEN SERVER IS STARTED, CONNECT TO DB FIRST
     console.log('Connected successfully to server');
     
     //! // save image to db
@@ -40,3 +40,4 @@ server.listen(port, async () => {
 // global.server = server;
 
 // exports = {server, dbClient};
+module.exports = server;

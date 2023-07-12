@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 
 app.use(morgan('dev')); //* use morgan to log requests in console
 app.use(bodyParser.urlencoded({extended: false})); //* use body-parser to parse urlencoded bodies
@@ -20,11 +20,11 @@ app.use((req, res, next) => { //* set headers to allow CORS
 });
 
 //* Routes
-// const userRoutes = require('./API/Routes/user');
+const authRoutes = require('./Routes/auth');
 const postRoutes = require('./Routes/post');
 const commentRoutes = require('./Routes/comment');
 
-// app.use('api/user', userRoutes); //* handle requests to /user
+app.use('/api/auth', authRoutes); //* handle requests to /user
 app.use('/api/post', postRoutes); //* handle requests to /post
 app.use('/api/comment', commentRoutes); //* handle requests to /comment
 
