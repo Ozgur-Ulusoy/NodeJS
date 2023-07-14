@@ -2,12 +2,34 @@ const mongoose = require('mongoose');
 const Post = require('../Models/post');
 const dbClient = require('../db.js');
 
-const createPost = async (title, content, ownerId) => {
+const createPost = async (title, content, ownerId, token) => {
+
+    if(!title || !content || !ownerId || !token) {
+        console.log('missing fields');
+        return {
+            success: false,
+            message: 'Missing fields',
+        };
+    }
+
+    // find user by ownerid
+    const user = await dbClient.db('DB').collection('Users').findOne({_id: new mongoose.Types.ObjectId(ownerId), token: token});
+
+    if(!user) {
+        console.log('no user found');
+        return {
+            success: false,
+            message: 'Invalid token',
+        };
+    }
+    
     const newPost = new Post({
         title: title,
         content: content,
         ownerId: new mongoose.Types.ObjectId(ownerId),
     });
+
+    
 
     var res = (await dbClient.db('DB').collection('Posts').insertOne(newPost)).acknowledged // is added to db
     // console.log(res);
@@ -38,7 +60,26 @@ const getPostByTitle = async (title, limit = 5) => {
     return posts;
 }
 
-const interactWithPost = async (postId, userId, interaction) => {
+const interactWithPost = async (postId, userId, interaction, token) => {
+
+    if(!postId || !userId || !interaction || !token) {
+        console.log('missing fields');
+        return {
+            success: false,
+            message: 'Missing fields',
+        };
+    }
+
+    // find user by ownerid
+    const user = await dbClient.db('DB').collection('Users').findOne({_id: new mongoose.Types.ObjectId(userId), token: token});
+    if(!user) {
+        console.log('no user found');
+        return {
+            success: false,
+            message: 'Invalid token',
+        };
+    }
+
     var post = await dbClient.db('DB').collection('Posts').findOne({_id: new mongoose.Types.ObjectId(postId)});
     var interactions = post['interactions'];
 

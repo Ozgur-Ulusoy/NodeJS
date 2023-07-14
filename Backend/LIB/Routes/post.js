@@ -4,10 +4,15 @@ const router = express.Router();
 const {createPost, getPostById, getRandomPostByCount, getPostByTitle, interactWithPost} = require('../Controllers/post');
 
 //! Create a post
-router.post('/create/:title/:content/:ownerId', async (req, res, next) => {
+router.post('/create', async (req, res, next) => {
     console.log('an attempt to create a post was made');
-    const {title, content, ownerId} = req.params;
-    var result = await createPost(title, content, ownerId);
+    const title = req.headers.title;
+    const content = req.headers.content;
+    const ownerid = req.headers.ownerid;
+    const token = req.headers.token;
+    console.log(title, content, ownerid, token);
+    var result = await createPost(title, content, ownerid, token);
+    console.log(result);
     if(result.success) {
         res.status(200).json({
             message: 'Post created successfully',
@@ -22,10 +27,11 @@ router.post('/create/:title/:content/:ownerId', async (req, res, next) => {
 });
 
 //! Get Post by Id
-router.get('/getPostById/:id', async (req, res, next) => {
+router.get('/getPostById', async (req, res, next) => {
     console.log('an attempt to get a post by id was made');
-    const {id} = req.params;
-    var result = await getPostById(id);
+    // const {id} = req.params;
+    const postid = req.headers.postid;
+    var result = await getPostById(postid);
     if (result) {
         res.status(200).json({
             message: 'Post retrieved successfully',
@@ -42,9 +48,10 @@ router.get('/getPostById/:id', async (req, res, next) => {
 });
 
 //! Get Random Post by Count
-router.get('/getRandomPostByCount/:count', async (req, res, next) => {
+router.get('/getRandomPostByCount', async (req, res, next) => {
     console.log('an attempt to get a random post by count was made');
-    const {count} = req.params;
+    // const {count} = req.params;
+    const count = req.headers.count;
     var result = await getRandomPostByCount(count);
     if (result) {
         res.status(200).json({
@@ -60,9 +67,12 @@ router.get('/getRandomPostByCount/:count', async (req, res, next) => {
 });
 
 //! Get Post by Title and Limit (default limit is 5)
-router.get('/getPostByTitle/:title/:limit', async (req, res, next) => {
+router.get('/getPostByTitle', async (req, res, next) => {
     console.log('an attempt to get a post by title was made');
-    const {title, limit} = req.params;
+    // const {title, limit} = req.params;
+    const title = req.headers.title;
+    const limit = req.headers.limit;
+
     var result = await getPostByTitle(title, limit);
     if (result) {
         res.status(200).json({
@@ -77,10 +87,15 @@ router.get('/getPostByTitle/:title/:limit', async (req, res, next) => {
 }});
 
 //! Post interaction to post (like, dislike)
-router.post('/interaction/:postId/:ownerId/:type', async (req, res, next) => {
+router.post('/interaction', async (req, res, next) => {
     console.log('an attempt to interact with a post was made');
-    const {postId, ownerId, type} = req.params;
-    var result = await interactWithPost(postId, ownerId, type);
+    // const {postId, ownerId, type} = req.params;
+    const postid = req.headers.postid;
+    const ownerid = req.headers.ownerid;
+    const type = req.headers.type;
+    const token = req.headers.token;
+
+    var result = await interactWithPost(postid, ownerid, type, token);
     console.log(result);
     if (result.success) {
         res.status(200).json({

@@ -4,10 +4,14 @@ const router = express.Router();
 const {createComment, replyComment, getComment, getReply, interactWithComment, interactWithReply} = require('../Controllers/comment');
 
 //! Create a comment to post
-router.post('/create/:postId/:content/:ownerId', async (req, res, next) => {
+router.post('/create', async (req, res, next) => {
     console.log('an attempt to create a comment was made');
-    const {postId, content, ownerId} = req.params;
-    var result = await createComment(postId, content, ownerId);
+    const postid = req.headers.postid;
+    const content = req.headers.content;
+    const ownerid = req.headers.ownerid;
+    const token = req.headers.token;
+
+    var result = await createComment(postid, content, ownerid, token);
     if(result.success) {
         res.status(200).json({
             message: 'Comment created successfully',
@@ -22,10 +26,16 @@ router.post('/create/:postId/:content/:ownerId', async (req, res, next) => {
 });
 
 //! Reply to a comment
-router.post('/reply/:postId/:commentId/:content/:ownerId', async (req, res, next) => {
+router.post('/reply', async (req, res, next) => {
     console.log('an attempt to reply to a comment was made');
-    const {postId, commentId, content, ownerId} = req.params;
-    var result = await replyComment(postId, commentId, content, ownerId);
+    // const {postId, commentId, content, ownerId} = req.params;
+    const postid = req.headers.postid;
+    const commentid = req.headers.commentid;
+    const content = req.headers.content;
+    const ownerid = req.headers.ownerid;
+    const token = req.headers.token;
+
+    var result = await replyComment(postid, commentid, content, ownerid, token);
     if(result.success) {
         res.status(200).json({
             message: 'Comment replied successfully',
@@ -40,10 +50,13 @@ router.post('/reply/:postId/:commentId/:content/:ownerId', async (req, res, next
 });
 
 //! Get Comment by post id - Limit to x
-router.get('/getComment/:postId/:limit', async (req, res, next) => {
+router.get('/getComment', async (req, res, next) => {
     console.log('an attempt to get a comment was made with limit');
-    const {postId, limit} = req.params;
-    var result = await getComment(postId, limit);
+    // const {postId, limit} = req.params;
+    const postid = req.headers.postid;
+    const limit = req.headers.limit;
+
+    var result = await getComment(postid, limit);
     if(result) {
         res.status(200).json({
             message: 'Comment retrieved successfully',
@@ -59,10 +72,14 @@ router.get('/getComment/:postId/:limit', async (req, res, next) => {
 });
 
 //! Get Reply by comment id - Limit to x
-router.get('/getReply/:postId/:commentId/:limit', async (req, res, next) => {
+router.get('/getReply', async (req, res, next) => {
     console.log('an attempt to get a reply was made with limit');
-    const {postId, commentId, limit} = req.params;
-    var result = await getReply(postId, commentId, limit);
+    // const {postId, commentId, limit} = req.params;
+    const postid = req.headers.postid;
+    const commentid = req.headers.commentid;
+    const limit = req.headers.limit;
+
+    var result = await getReply(postid, commentid, limit);
     if(result) {
         res.status(200).json({
             message: 'Reply retrieved successfully',
@@ -78,10 +95,15 @@ router.get('/getReply/:postId/:commentId/:limit', async (req, res, next) => {
 });
 
 //! Interact with comment
-router.post('/interact/:postId/:commentId/:userId/:type', async (req, res, next) => {
+router.post('/interact', async (req, res, next) => {
     console.log('an attempt to interact with a comment was made');
-    const {postId, commentId, userId, type} = req.params;
-    var result = await interactWithComment(postId, commentId, userId, type);
+    // const {postId, commentId, userId, type} = req.params;
+    const postid = req.headers.postid;
+    const commentid = req.headers.commentid;
+    const userid = req.headers.userid;
+    const type = req.headers.type;
+    const token = req.headers.token;
+    var result = await interactWithComment(postid, commentid, userid, type, token);
 
     if(result.success) {
         res.status(200).json({
@@ -98,10 +120,17 @@ router.post('/interact/:postId/:commentId/:userId/:type', async (req, res, next)
 });
 
 //! Interact with reply
-router.post('/interact/:postId/:commentId/:replyId/:userId/:type', async (req, res, next) => {
+router.post('/interact', async (req, res, next) => {
     console.log('an attempt to interact with a reply was made');
-    const {postId, commentId, replyId, userId, type} = req.params;
-    var result = await interactWithReply(postId, commentId, replyId, userId, type);
+    // const {postId, commentId, replyId, userId, type} = req.params;
+    const postid  =  req.headers.postid;
+    const commentid = req.headers.commentid;
+    const replyid = req.headers.replyid;
+    const userid = req.headers.userid;
+    const type = req.headers.type;
+    const token = req.headers.token;
+
+    var result = await interactWithReply(postid, commentid, replyid, userid, type, token);
 
     if(result.success) {
         res.status(200).json({

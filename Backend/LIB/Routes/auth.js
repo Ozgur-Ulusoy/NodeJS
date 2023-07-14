@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const {Login, Logout, CheckSession} = require('../Controllers/auth');
 
-router.post('/login/:username/:password', async (req, res, next) => {
-    const {username, password} = req.params;
+router.post('/login', async (req, res, next) => { // /:username/:password
+    const username = req.headers.username;
+    const password = req.headers.password;
+
     var result = await Login(username, password);
     console.log(result);
     if(result.success) {
@@ -19,8 +21,8 @@ router.post('/login/:username/:password', async (req, res, next) => {
     }
 });
 
-router.post('/logout/:token', async (req, res, next) => {
-    const {token} = req.params;
+router.post('/logout', async (req, res, next) => {
+    const token = req.headers.token;
     const result = await Logout(token);
     if(result.success) {
         res.status(200).json({
@@ -34,8 +36,8 @@ router.post('/logout/:token', async (req, res, next) => {
     }
 });
 
-router.get('/checkSession/:token', async (req, res, next) => {
-    const {token} = req.params;
+router.get('/checkSession', async (req, res, next) => {
+    const token = req.headers.token;
     var result = await CheckSession(token);
     if(result.success) {
         res.status(200).json({

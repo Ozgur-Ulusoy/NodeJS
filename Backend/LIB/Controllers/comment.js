@@ -2,7 +2,26 @@ const mongoose = require('mongoose');
 const Comment = require('../Models/comment');
 const dbClient = require('../db.js');
 
-const createComment = async (postId, content, ownerId) => {
+const createComment = async (postId, content, ownerId, token) => {
+
+    if(!postId || !content || !ownerId || !token) {
+        console.log('missing fields');
+        return {
+            success: false,
+            message: 'Missing fields',
+        };
+    }
+
+    // find user by ownerid
+    const user = await dbClient.db('DB').collection('Users').findOne({_id: new mongoose.Types.ObjectId(ownerId), token: token});
+    if(!user) {
+        console.log('no user found');
+        return {
+            success: false,
+            message: 'Invalid token',
+        };
+    }
+
     const newComment = new Comment({
         content: content,
         ownerId: new mongoose.Types.ObjectId(ownerId),
@@ -18,7 +37,26 @@ const createComment = async (postId, content, ownerId) => {
     }; 
 }
 
-const replyComment = async (postId, commentId, content, ownerId) => {
+const replyComment = async (postId, commentId, content, ownerId, token) => {
+
+    if(!postId || !commentId || !content || !ownerId || !token) {   
+        console.log('missing fields');
+        return {
+            success: false,
+            message: 'Missing fields',
+        };
+    }
+
+    // find user by ownerid
+    const user = await dbClient.db('DB').collection('Users').findOne({_id: new mongoose.Types.ObjectId(ownerId), token: token});
+    if(!user) {
+        console.log('no user found');
+        return {
+            success: false,
+            message: 'Invalid token',
+        };
+    }
+
     const newComment = new Comment({
         content: content,
         ownerId: new mongoose.Types.ObjectId(ownerId),
@@ -72,7 +110,25 @@ const getReply = async (postId, commentId, limit = 5) => {
     return replies;
 }
 
-const interactWithComment = async (postId, commentId, userId, interaction) => {
+const interactWithComment = async (postId, commentId, userId, interaction, token) => {
+
+    if(!postId || !commentId || !userId || !interaction || !token) {
+        console.log('missing fields');
+        return {
+            success: false,
+            message: 'Missing fields',
+        };
+    }
+
+    // find user by ownerid
+    const user = await dbClient.db('DB').collection('Users').findOne({_id: new mongoose.Types.ObjectId(userId), token: token});
+    if(!user) {
+        console.log('no user found');
+        return {
+            success: false,
+            message: 'Invalid token',
+        };
+    }
 
     // get comment by post id and comment id
     var comment = await dbClient.db('DB').collection('Posts').findOne({_id: new mongoose.Types.ObjectId(postId), 'comments._id': new mongoose.Types.ObjectId(commentId)}, {projection: {_id: 0, 'comments.$': 1}});
@@ -136,8 +192,26 @@ const interactWithComment = async (postId, commentId, userId, interaction) => {
 
 }
 
-const interactWithReply = async (postId, commentId, replyId, userId, interaction) => {
+const interactWithReply = async (postId, commentId, replyId, userId, interaction, token) => {
     
+    if(!postId || !commentId || !replyId || !userId || !interaction || !token) {
+        console.log('missing fields');
+        return {
+            success: false,
+            message: 'Missing fields',
+        };
+    }
+
+    // find user by ownerid
+    const user = await dbClient.db('DB').collection('Users').findOne({_id: new mongoose.Types.ObjectId(userId), token: token});
+    if(!user) {
+        console.log('no user found');
+        return {
+            success: false,
+            message: 'Invalid token',
+        };
+    }
+
     // get the object of the reply - reply is under replies array in the comment and has the same id as the replyId
     var reply = await dbClient.db('DB').collection('Posts').findOne({_id: new mongoose.Types.ObjectId(postId), 'comments._id': new mongoose.Types.ObjectId(commentId), 'comments.replies._id': new mongoose.Types.ObjectId(replyId)}, {projection: {_id: 0, 'comments.$': 1}}).then((val) => {
         return val.comments[0].replies.filter((reply) => {
