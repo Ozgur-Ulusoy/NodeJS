@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:worldflow/Data/screenUtil.dart';
+import 'package:worldflow/InternetManager.dart';
+
+import '../Data/Models/user.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,6 +14,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   // Auth
   final LocalAuthentication auth = LocalAuthentication();
@@ -59,6 +63,35 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
+              SizedBox(height: ScreenUtil.height * 0.02),
+              // create a text field for password
+              SizedBox(
+                width: ScreenUtil.width * 0.8,
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    hintText: 'Password',
+                    hintStyle: TextStyle(
+                      color: Colors.white,
+                    ),
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+
               SizedBox(height: ScreenUtil.height * 0.1),
               // LOGIN BUTTON HERE
               SizedBox(
@@ -68,7 +101,8 @@ class _LoginPageState extends State<LoginPage> {
                     // final response = await BiometricStorage().canAuthenticate();
                     // print(response);
 
-                    // return;
+                    // login
+
                     if (_usernameController.text.isEmpty) {
                       ScaffoldMessenger.of(context)
                         ..removeCurrentSnackBar()
@@ -82,20 +116,66 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       return;
                     }
+
+                    if (_passwordController.text.isEmpty) {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Please enter a password',
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      return;
+                    }
+
+                    User? user = await InternetManager.login(
+                      _usernameController.text,
+                      _passwordController.text,
+                    );
+                    print(user);
+
+                    if (user == null) {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Invalid username or password',
+                            ),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      return;
+                    } else {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(
+                          const SnackBar(
+                            content: Text(
+                              'Login successful',
+                            ),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      print('${user.username} ${user.token} ${user.id}');
+                    }
+
+                    //
                     final bool canAuthenticateWithBiometrics =
                         await auth.canCheckBiometrics;
                     final bool canAuthenticate =
                         canAuthenticateWithBiometrics ||
                             await auth.isDeviceSupported();
-                    print(canAuthenticate);
+                    // print(canAuthenticate);
 
                     List<BiometricType> availableBiometrics =
                         await auth.getAvailableBiometrics();
-                    print(availableBiometrics);
+                    // print(availableBiometrics);
 
-                    for (var element in availableBiometrics) {}
-
-                    if (canAuthenticate) {
+                    if (canAuthenticate && availableBiometrics.isNotEmpty) {
                       final bool didAuthenticate = await auth.authenticate(
                           localizedReason: 'Please authenticate to login',
                           options: const AuthenticationOptions(

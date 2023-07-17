@@ -6,6 +6,7 @@ const dbClient = require('../db.js');
 const User = require('../models/user.js');
 
 const Login = async (username, password) => {
+        console.log(username + ' ' + password);
         
         var encryptedPassword = await bcrypt.hash(password, 10); // create hash password
         
