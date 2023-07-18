@@ -49,4 +49,23 @@ class InternetManager {
       return false;
     }
   }
+
+  static Future<bool> checkSession(String token) async {
+    String url = '${_authUrl}checkSession';
+
+    try {
+      Response response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'token': token,
+          },
+        ),
+      );
+      return response.data['success'];
+    } catch (e) {
+      return false;
+    }
+  }
 }

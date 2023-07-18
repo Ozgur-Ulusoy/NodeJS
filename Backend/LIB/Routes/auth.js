@@ -41,8 +41,9 @@ router.get('/checkSession', async (req, res, next) => {
     var result = await CheckSession(token);
     if(result.success) {
         res.status(200).json({
+            success: result['success'],
             message: result['message'],
-            user: result['user'],
+            // user: result['user'],
         });
     }
     else {

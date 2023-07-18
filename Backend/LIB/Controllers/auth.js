@@ -73,7 +73,7 @@ const CheckSession = async (token) => {
         const decoded = jwt.verify(token, process.env.TOKEN_KEY);
         const user = await dbClient.db('DB').collection('Users').findOne({_id: new mongoose.Types.ObjectId(decoded.user_id), username: decoded.username});
         if(user.token === token) {
-            return {success: true, user: user, message: 'User logged in successfully'};
+            return {success: true, message: 'User logged in successfully'};
         }
         else {
             return {success: false, message: 'Invalid token'};

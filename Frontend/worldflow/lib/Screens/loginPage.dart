@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:worldflow/Data/Consts/AppConstants.dart';
+import 'package:worldflow/Data/Consts/LocalDatabaseConstants.dart';
+import 'package:worldflow/Data/Models/LocalDatabaseModels/UserModel.dart';
 import 'package:worldflow/Data/screenUtil.dart';
-import 'package:worldflow/InternetManager.dart';
+import 'package:worldflow/Data/Managers/InternetManager.dart';
 
+import '../Data/Managers/HiveManager.dart';
 import '../Data/Models/user.dart';
 
 class LoginPage extends StatefulWidget {
@@ -22,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 81, 105, 208),
+      backgroundColor: AppConsts.backgroundColor,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -160,6 +164,19 @@ class _LoginPageState extends State<LoginPage> {
                             backgroundColor: Colors.green,
                           ),
                         );
+
+                      UserModel userModel = UserModel(
+                        id: user.id,
+                        username: user.username,
+                        token: user.token,
+                      );
+
+                      await HiveGlobal.instance
+                          .putData(LocalDatabaseConstants.USER, userModel);
+
+                      // route to main page
+                      await Navigator.pushNamedAndRemoveUntil(
+                          context, '/home', (route) => false);
                       print('${user.username} ${user.token} ${user.id}');
                     }
 
