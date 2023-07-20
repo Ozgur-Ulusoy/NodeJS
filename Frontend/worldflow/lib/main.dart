@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:worldflow/Data/StateManagement/HomePageState.dart';
 import 'package:worldflow/Screens/homePage.dart';
 import 'package:worldflow/Screens/loginPage.dart';
 import 'package:worldflow/Screens/mainPage.dart';
@@ -16,17 +18,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'WorldFlow',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => HomePageProvider()),
+      ],
+      child: MaterialApp(
+        title: 'WorldFlow',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        routes: {
+          '/main': (context) => const MainPage(),
+          '/login': (context) => const LoginPage(),
+          '/home': (context) => const HomePage(),
+        },
+        initialRoute: '/main',
       ),
-      routes: {
-        '/main': (context) => const MainPage(),
-        '/login': (context) => const LoginPage(),
-        '/home': (context) => const HomePage(),
-      },
-      initialRoute: '/main',
     );
   }
 }

@@ -27,6 +27,7 @@ class _MainPageState extends State<MainPage> {
       return const HomePage();
     } else {
       // await Navigator.pushNamed(context, '/login');
+      print('user is null or session is expired');
       await HiveGlobal.instance.deleteData(LocalDatabaseConstants.USER);
       return const LoginPage();
     }
