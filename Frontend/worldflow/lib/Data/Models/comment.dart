@@ -17,19 +17,18 @@ class Comment {
 
   factory Comment.fromJson(Map<String, dynamic> json) {
     List<Comment?> comments = [];
-    if (json['comments'] != null) {
-      json['comments']
-          .map((comment) => comments.add(Comment.fromJson(comment)));
-    }
     List<String> likes = [];
-    if (json['interactions']['likes'] != null) {
-      json['interactions']['likes'].map((like) => likes.add(like.toString()));
-    }
     List<String> dislikes = [];
-    if (json['interactions']['dislikes'] != null) {
-      json['interactions']['dislikes']
-          .map((dislike) => dislikes.add(dislike.toString()));
-    }
+
+    var tempComments = json['comments'] as List<dynamic>;
+    comments = tempComments.map((e) => Comment.fromJson(e)).toList();
+
+    var tempLikes = json['interactions']['likes'] as List<dynamic>;
+    likes = tempLikes.map((e) => e.toString()).toList();
+
+    var tempDislikes = json['interactions']['dislikes'] as List<dynamic>;
+    dislikes = tempDislikes.map((e) => e.toString()).toList();
+
     return Comment(
       content: json['content'],
       ownerId: json['ownerId'],

@@ -57,15 +57,21 @@ class _HomePageState extends State<HomePage> {
                     return ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
+                        // print users token
                         return GestureDetector(
                           onTap: () {
+                            print(snapshot.data![index].id);
                             print(snapshot.data![index].title);
                             print(snapshot.data![index].content);
                             print(snapshot.data![index].ownerId);
                             print(snapshot.data![index].comments);
-                            print(snapshot.data![index].likes);
-                            print(snapshot.data![index].dislikes);
-                            print(snapshot.data![index].createdAt);
+                            print(
+                                '${snapshot.data![index].likes.length} likes');
+                            print(
+                                '${snapshot.data![index].dislikes.length} dislikes');
+                            print(
+                                '${snapshot.data![index].createdAt} created at');
+                            print('-------------------');
                           },
                           child: ListTile(
                             title: Text(snapshot.data![index].title),
