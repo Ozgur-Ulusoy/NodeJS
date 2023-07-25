@@ -7,6 +7,11 @@ const UserSchema = mongoose.Schema({
         unique: true,
         required: true,
         },
+    email: { //! EMAIL OF USER
+        type: String,
+        unique: true,
+        required: true,
+        },
     password: { //! PASSWORD OF USER
         type: String,
         minlength: 6,
@@ -15,6 +20,11 @@ const UserSchema = mongoose.Schema({
     token: { //! TOKEN OF USER
         type: String,
         required: false,
+    },
+    isVerified: { //! IS USER VERIFIED
+        type: Boolean,
+        required: true,
+        default: false,
     },
 }, {
     collection : 'Users'
