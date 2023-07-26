@@ -14,7 +14,8 @@ class InternetManager {
   static const String _postUrl = '${_baseUrl}post/';
 
   //! Auth API
-  static Future<User?> login(String username, String password) async {
+  static Future<User?> login(
+      String username, String email, String password) async {
     String url = '${_authUrl}login';
 
     try {
@@ -24,6 +25,7 @@ class InternetManager {
           headers: {
             'Content-Type': 'application/json',
             'username': username,
+            'email': email,
             'password': password,
           },
         ),
@@ -69,6 +71,26 @@ class InternetManager {
       return response.data['success'];
     } catch (e) {
       return false;
+    }
+  }
+
+  static Future<void> sendEmailVerify(String email, String username) async {
+    String url = '${_authUrl}sendVerifyEmail';
+
+    try {
+      Response response = await dio.post(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'email': email,
+            'username': username,
+          },
+        ),
+      );
+      print(response.data);
+    } catch (e) {
+      print(e);
     }
   }
 
