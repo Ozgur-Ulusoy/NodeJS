@@ -54,14 +54,7 @@ const Login = async (username,email, password) => {
                 expiresIn: "24h",
             });
 
-            //! if user will not be verified after 1 hours, delete user from db
-            setTimeout(async () => {
-                console.log('do mission');
-                console.log(await dbClient.db('DB').collection('Users').findOne({_id: user._id , isVerified: false}));
-                await dbClient.db('DB').collection('Users').deleteOne({_id: user._id , isVerified: false});
-        }, 1); 
-
-            console.log(token);
+            // console.log(token);
             newUser.token = token;
             dbClient.db('DB').collection('Users').updateOne({_id: user._id}, {$set: {token: token}});
             
@@ -170,6 +163,71 @@ const VerifyEmail = async (token) => {
     }
 }
 
+const SendResetPasswordEmail = async (email, password) => {
+    const token = jwt.sign({
+        data: {
+            email: email,
+            password: password,
+        }}, process.env.TOKEN_KEY, { expiresIn: '10m' }  
+    );    
+    
+    const mailConfigurations = {
+    from: process.env.EMAIL_USERNAME,
+    to: email,
+    // Subject of Email
+    subject: 'WorldFlow Password Reset',
+    // This would be the text of email body
+    text: `Hello! Please follow the given link to reset your password http://localhost:3000/api/auth/resetPassword/${token} Thanks`
+    };
+
+    // const sendEmail = async () => {
+         return await transporter.sendMail(mailConfigurations, function (error, info) {
+            // wait for response and return info if successful or error if unsuccessful
+            if (error) {
+                console.log(error);
+                res = {success: false, message: 'Email not sent'};
+            } else {
+                console.log('Email sent: ' + info.response);
+                res = {success: true, message: 'Email sent'};
+                return info.response;
+            }
+        });
+    // }
+    
+}
+
+const ResetPassword = async (token) => {
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN_KEY);
+        const user = await dbClient.db('DB').collection('Users').findOne({email: decoded.data.email});
+        
+        if(user) {
+            // cyrpt new password
+            const encryptedPassword = await bcrypt.hash(decoded.data.password, 10);
+            // update password in db
+            await dbClient.db('DB').collection('Users').updateOne({_id: user._id}, {$set: {password: encryptedPassword}});
+            return {success: true, message: 'Password reset successfully'};
+        }
+        else {
+            return {success: false, message: 'Invalid token'};
+        }
+    } catch (error) {
+        return {success: false, message: 'Invalid token'};
+    }
+}
+
+// check is given email is already registered
+const CheckEmail = async (email) => {
+    var res = await dbClient.db('DB').collection('Users').findOne({email: email});
+    if(res) {
+        return true;
+    }
+    else {
+        return false;
+    }
+    
+}
+
 // // create controller for signup
 // exports.signup = (req, res, next) => {
 //     const {username, password} = req.body;
@@ -181,4 +239,7 @@ module.exports = {
     CheckSession,
     SendVerifyEmail,
     VerifyEmail,
+    SendResetPasswordEmail,
+    ResetPassword,
+    CheckEmail,
 }

@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:worldflow/Data/Consts/AppConstants.dart';
@@ -126,7 +127,178 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: ScreenUtil.height * 0.1),
+                SizedBox(height: ScreenUtil.height * 0.015),
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: ScreenUtil.width * 0.05),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      // FORGOT PASSWORD BUTTON HERE
+                      SizedBox(
+                        width: ScreenUtil.width * 0.4,
+                        child: TextButton(
+                          // disable press hover effect
+                          style: ButtonStyle(
+                            overlayColor: MaterialStateProperty.all(
+                              Colors.transparent,
+                            ),
+                          ),
+                          onPressed: () async {
+                            // show dialog with email and new password fields and a submit button
+                            TextEditingController emailController =
+                                TextEditingController();
+                            TextEditingController passwordController =
+                                TextEditingController();
+                            TextEditingController confirmPasswordController =
+                                TextEditingController();
+
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                title: const Center(
+                                    child: Text('Forgot Password')),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextField(
+                                      controller: emailController,
+                                      keyboardType: TextInputType.emailAddress,
+                                      decoration: const InputDecoration(
+                                        hintText: 'Email',
+                                      ),
+                                    ),
+                                    TextField(
+                                      controller: passwordController,
+                                      obscureText: true,
+                                      decoration: const InputDecoration(
+                                        hintText: 'New Password',
+                                      ),
+                                    ),
+                                    TextField(
+                                      controller: confirmPasswordController,
+                                      obscureText: true,
+                                      decoration: const InputDecoration(
+                                        hintText: 'Confirm Password',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () async {
+                                      // send email with new password
+                                      if (passwordController.text.isEmpty ||
+                                          confirmPasswordController
+                                              .text.isEmpty ||
+                                          emailController.text.isEmpty) {
+                                        ScaffoldMessenger.of(context)
+                                          ..removeCurrentSnackBar()
+                                          ..showSnackBar(
+                                            const SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text(
+                                                'Please fill in all fields',
+                                              ),
+                                            ),
+                                          );
+                                        return;
+                                      }
+
+                                      // if valid email
+                                      if (!EmailValidator.validate(
+                                          emailController.text)) {
+                                        ScaffoldMessenger.of(context)
+                                          ..removeCurrentSnackBar()
+                                          ..showSnackBar(
+                                            const SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text(
+                                                'Please enter a valid email',
+                                              ),
+                                            ),
+                                          );
+                                        return;
+                                      }
+
+                                      if (passwordController.text !=
+                                          confirmPasswordController.text) {
+                                        ScaffoldMessenger.of(context)
+                                          ..removeCurrentSnackBar()
+                                          ..showSnackBar(
+                                            const SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text(
+                                                'Passwords do not match',
+                                              ),
+                                            ),
+                                          );
+                                        return;
+                                      }
+
+                                      if (passwordController.text.length < 6) {
+                                        ScaffoldMessenger.of(context)
+                                          ..removeCurrentSnackBar()
+                                          ..showSnackBar(
+                                            const SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text(
+                                                'Password must be at least 6 characters',
+                                              ),
+                                            ),
+                                          );
+                                        return;
+                                      }
+
+                                      var result = await InternetManager
+                                          .sendResetPasswordEmail(
+                                              email: emailController.text,
+                                              password:
+                                                  passwordController.text);
+
+                                      if (result['success']) {
+                                        Navigator.pop(context);
+
+                                        ScaffoldMessenger.of(context)
+                                          ..removeCurrentSnackBar()
+                                          ..showSnackBar(
+                                            const SnackBar(
+                                              backgroundColor: Colors.green,
+                                              content: Text(
+                                                'Password Change Email sent',
+                                              ),
+                                            ),
+                                          );
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                          ..removeCurrentSnackBar()
+                                          ..showSnackBar(
+                                            SnackBar(
+                                              backgroundColor: Colors.red,
+                                              content: Text(
+                                                  result['message'] ?? 'Error'),
+                                            ),
+                                          );
+                                      }
+                                    },
+                                    child: const Text('Submit'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Forgot Password?',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: ScreenUtil.height * 0.035),
                 // LOGIN BUTTON HERE
                 SizedBox(
                   width: ScreenUtil.width * 0.8,

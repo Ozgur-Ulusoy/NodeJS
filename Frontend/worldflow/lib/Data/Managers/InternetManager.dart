@@ -94,6 +94,32 @@ class InternetManager {
     }
   }
 
+  static Future<Map<String, dynamic>> sendResetPasswordEmail(
+      {required String email, password}) async {
+    String url = '${_authUrl}sendResetPasswordEmail';
+
+    try {
+      Response response = await dio.post(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'email': email,
+            'password': password,
+          },
+        ),
+      );
+      print(response.data);
+      return response.data;
+    } catch (e) {
+      print(e);
+      return {
+        'success': false,
+        'message': 'Something went wrong',
+      };
+    }
+  }
+
   //! Post API
   static Future<List<Post>> getRandomPosts(int count) async {
     String url = '${_postUrl}getRandomPostByCount';

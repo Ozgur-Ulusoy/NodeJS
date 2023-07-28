@@ -2,7 +2,12 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const helmet = require('helmet'); //* use helmet to secure app by setting various HTTP headers
+const hpp = require('hpp'); //* use hpp to protect against HTTP Parameter Pollution attacks
 
+
+app.use(helmet()); //* use helmet to secure app by setting various HTTP headers
+app.use(hpp()); //* use hpp to protect against HTTP Parameter Pollution attacks
 app.use(morgan('dev')); //* use morgan to log requests in console
 app.use(bodyParser.urlencoded({extended: false})); //* use body-parser to parse urlencoded bodies
 app.use(bodyParser.json()); //* use body-parser to parse json bodies
