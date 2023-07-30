@@ -20,8 +20,12 @@ class Comment {
     List<String> likes = [];
     List<String> dislikes = [];
 
-    var tempComments = json['comments'] as List<dynamic>;
-    comments = tempComments.map((e) => Comment.fromJson(e)).toList();
+    if (json['comments'] == null) {
+      // print('comments is null');
+    } else {
+      var tempComments = json['comments'] as List<dynamic>;
+      comments = tempComments.map((e) => Comment.fromJson(e)).toList();
+    }
 
     var tempLikes = json['interactions']['likes'] as List<dynamic>;
     likes = tempLikes.map((e) => e.toString()).toList();

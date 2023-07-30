@@ -6,6 +6,7 @@ import 'package:worldflow/Screens/loginPage.dart';
 import 'package:worldflow/Screens/mainPage.dart';
 
 import 'Data/Managers/HiveManager.dart';
+import 'Data/StateManagement/PostsPageState.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => HomePageProvider()),
+        ChangeNotifierProvider(create: (context) => PostsPageState()),
       ],
       child: MaterialApp(
         title: 'WorldFlow',

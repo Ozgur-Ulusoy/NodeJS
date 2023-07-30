@@ -31,13 +31,9 @@ transporter.verify(function (error, success) {
 
 
 const Login = async (username,email, password) => {
-        console.log(username + ' ' + password);
         
         var encryptedPassword = await bcrypt.hash(password, 10); // create hash password
-        
         const oldUser = await dbClient.db('DB').collection('Users').findOne({username: username, email: email}); // find user by username
-        
-        console.log(oldUser);
         if (!oldUser) { // if user not found create new user
             // create
             const newUser = new User({

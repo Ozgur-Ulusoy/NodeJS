@@ -205,6 +205,8 @@ class _LoginPageState extends State<LoginPage> {
                                         return;
                                       }
 
+                                      // print(EmailValidator.validate(
+                                      //     emailController.text));
                                       // if valid email
                                       if (!EmailValidator.validate(
                                           emailController.text)) {
@@ -346,6 +348,20 @@ class _LoginPageState extends State<LoginPage> {
                                 'Please enter a password',
                               ),
                               backgroundColor: Colors.red,
+                            ),
+                          );
+                        return;
+                      }
+
+                      if (!EmailValidator.validate(_emailController.text)) {
+                        ScaffoldMessenger.of(context)
+                          ..removeCurrentSnackBar()
+                          ..showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                'Please enter a valid email',
+                              ),
                             ),
                           );
                         return;

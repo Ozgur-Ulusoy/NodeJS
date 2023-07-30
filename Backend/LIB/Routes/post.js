@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {createPost, getPostById, getRandomPostByCount, getPostByTitle, interactWithPost} = require('../Controllers/post');
+const {createPost, getPostById, getRandomPostByCount, getPostByTitle, interactWithPost, getPostCount, getPostByPage} = require('../Controllers/post');
 
 //! Create a post
 router.post('/create', async (req, res, next) => {
@@ -30,8 +30,7 @@ router.post('/create', async (req, res, next) => {
 router.get('/getPostById', async (req, res, next) => {
     console.log('an attempt to get a post by id was made');
     // const {id} = req.params;
-    const postid = req.headers.postid;
-    var result = await getPostById(postid);
+    var result = await getPostById(req.headers.postid);
     if (result) {
         res.status(200).json({
             message: 'Post retrieved successfully',
@@ -45,6 +44,55 @@ router.get('/getPostById', async (req, res, next) => {
     }
 
 
+});
+
+router.get('/getPostCount', async (req, res, next) => {
+    console.log('an attempt to get a post count was made');
+    var result = await getPostCount();
+    if (result) {
+        res.status(200).json({
+            message: 'Post count retrieved successfully',
+            count: result,
+        });
+    }
+    else {
+        res.status(500).json({
+            message: 'Post count retrieval failed',
+        });
+    }
+});
+
+// //! Get Post by Page
+// router.get('/getPostByPage', async (req, res, next) => {
+//     console.log('an attempt to get a post by page was made');
+//     var result = await getPostByPage(req.headers.page, req.headers.limit || 25);
+//     if (result) {
+//         res.status(200).json({
+//             message: 'Post retrieved successfully',
+//             posts: result,
+//         });
+//     }
+//     else {
+//         res.status(500).json({
+//             message: 'Post retrieval failed',
+//         });
+//     }
+// });
+
+router.get('/getPostsByPage', async (req, res, next) => {
+    console.log('an attempt to get a post by page was made');
+    var result = await getPostByPage(req.headers.page, req.headers.limit || 25);
+    if (result) {
+        res.status(200).json({
+            message: 'Post retrieved successfully',
+            posts: result,
+        });
+    }
+    else {
+        res.status(500).json({
+            message: 'Post retrieval failed',
+        });
+    }
 });
 
 //! Get Random Post by Count

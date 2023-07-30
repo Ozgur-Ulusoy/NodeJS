@@ -138,10 +138,30 @@ const interactWithPost = async (postId, userId, interaction, token) => {
     };
 };
 
+const getPostCount = async () => {
+    const count = await dbClient.db('DB').collection('Posts').countDocuments();
+    return count;
+};
+
+const getPostByPage = async (page = 0, limit = 25) => {
+    // convert limit to int
+
+    limit = parseInt(limit);
+    page = parseInt(page);
+
+    skip = (page) * limit
+
+    const posts = await dbClient.db('DB').collection('Posts').find().skip(skip).limit(limit).toArray();
+    console.log(posts);
+    return posts;
+};
+
 module.exports = {
     createPost,
     getPostById,
     getRandomPostByCount,
     getPostByTitle,
     interactWithPost,
+    getPostCount,
+    getPostByPage,
 };

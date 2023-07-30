@@ -8,7 +8,6 @@ router.post('/login', async (req, res, next) => { // /:username/:password
     // const password = req.headers.password;
 
     var result = await Login(req.headers.username,req.headers.email, req.headers.password);
-    console.log(result);
     if(result.success) {
         res.status(200).json({
             message: result['message'],

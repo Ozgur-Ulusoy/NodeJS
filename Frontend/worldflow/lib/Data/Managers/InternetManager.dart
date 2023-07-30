@@ -146,4 +146,32 @@ class InternetManager {
       return [];
     }
   }
+
+  //! Get Post by Page
+  static Future<List<Post>> getPostsByPage(int page) async {
+    String url = '${_postUrl}getPostsByPage';
+
+    try {
+      Response response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'page': page,
+            'limit': 20,
+          },
+        ),
+      );
+      // return list of posts from response
+      // print(response.data['posts']);
+      List<Post> posts = [];
+      response.data['posts'].forEach((post) {
+        if (post != null) posts.add(Post.fromJson(post));
+      });
+      return posts;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 }
