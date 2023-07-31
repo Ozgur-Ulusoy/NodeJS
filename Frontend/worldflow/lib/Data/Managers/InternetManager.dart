@@ -174,4 +174,32 @@ class InternetManager {
       return [];
     }
   }
+
+  //! Get Post by Title
+  static Future<List<Post>> searchPosts(String title) async {
+    String url = '${_postUrl}getPostsByTitle';
+
+    try {
+      Response response = await dio.get(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'title': title,
+            'limit': 15,
+          },
+        ),
+      );
+      // return list of posts from response
+      // print(response.data['posts']);
+      List<Post> posts = [];
+      response.data['posts'].forEach((post) {
+        if (post != null) posts.add(Post.fromJson(post));
+      });
+      return posts;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
 }

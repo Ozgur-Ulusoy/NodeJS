@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:worldflow/Data/Consts/AppConstants.dart';
-import 'package:worldflow/Data/Managers/InternetManager.dart';
-import 'package:worldflow/Data/Models/post.dart';
 import 'package:worldflow/Screens/postsPage.dart';
+import 'package:worldflow/Screens/searchPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,18 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
-  Widget page = Scaffold(
-    backgroundColor: AppConsts.backgroundColor,
-    body: const Center(
-      child: Text(
-        'HOME PAGE',
-        style: TextStyle(
-          fontSize: 50,
-          color: Colors.white,
-        ),
-      ),
-    ),
-  );
+  Widget page = const PostsPage();
 
   @override
   void initState() {
@@ -48,20 +36,9 @@ class _HomePageState extends State<HomePage> {
             },
           );
           if (value == 0) {
-            page = PostsPage();
+            page = const PostsPage();
           } else if (value == 1) {
-            page = Scaffold(
-              backgroundColor: AppConsts.backgroundColor,
-              body: const Center(
-                child: Text(
-                  'PROFILE PAGE',
-                  style: TextStyle(
-                    fontSize: 50,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            );
+            page = const SearchPage();
           }
         },
         items: const [
@@ -70,8 +47,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
+            icon: Icon(Icons.search),
+            label: 'Search',
           ),
         ],
       ),

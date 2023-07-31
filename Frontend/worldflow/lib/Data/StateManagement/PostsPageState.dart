@@ -3,6 +3,7 @@ import 'package:worldflow/Data/Models/post.dart';
 
 class PostsPageState extends ChangeNotifier {
   int page = 0;
+  int maxPage = 5;
   List<Post> posts = [];
   bool isFinish = false;
 
@@ -19,6 +20,11 @@ class PostsPageState extends ChangeNotifier {
   }
 
   void setPage(int newPage) {
+    if (newPage > maxPage) {
+      isFinish = true;
+      notifyListeners();
+      return;
+    }
     page = newPage;
     notifyListeners();
   }

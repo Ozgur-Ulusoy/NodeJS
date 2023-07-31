@@ -3,7 +3,8 @@ import 'package:loadmore/loadmore.dart';
 import 'package:provider/provider.dart';
 import 'package:worldflow/Data/Managers/InternetManager.dart';
 import 'package:worldflow/Data/StateManagement/PostsPageState.dart';
-import 'package:worldflow/Data/screenUtil.dart';
+import 'package:worldflow/Data/Widgets/LoadMoreDelegete.dart';
+import 'package:worldflow/Data/Widgets/PostCard.dart';
 
 import '../Data/Consts/AppConstants.dart';
 
@@ -47,6 +48,7 @@ class _PostsPageState extends State<PostsPage> {
                 // return value.clearPosts();
               },
               child: LoadMore(
+                delegate: CustomLoadMoreDelegate(),
                 // delegate: const DefaultLoadMoreDelegate(),
                 // change default color
                 isFinish: value.isFinish,
@@ -66,43 +68,28 @@ class _PostsPageState extends State<PostsPage> {
                   }
                 },
                 onLoadMore: () async {
-                  value.page = value.page + 1;
-                  bool canReload = true;
+                  value.setPage(value.page + 1);
+                  // bool canReload = true;
                   await InternetManager.getPostsByPage(value.page).then(
                     (val) {
                       if (val.isEmpty) {
                         value.page = value.page - 1;
-                        canReload = false;
-                        Provider.of<PostsPageState>(context, listen: false)
-                            .setIsFinish(true);
+                        // canReload = false;
+                        value.setIsFinish(true);
                       } else {
-                        Provider.of<PostsPageState>(context, listen: false)
-                            .addPosts(val);
-                        canReload = true;
+                        value.addPosts(val);
+                        // canReload = true;
                       }
                       // Provider.of<PostsPageState>(context, listen: false)
                       //     .addPosts(value);
                     },
                   );
-                  return canReload;
+                  return value.isFinish == false;
                 },
                 child: ListView.separated(
                   separatorBuilder: (context, index) => const Divider(),
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      height: ScreenUtil.height * 0.08,
-                      alignment: Alignment.center,
-                      child: ListTile(
-                        title: Text(
-                          value.posts[index].title,
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        trailing: Text(
-                          value.posts[index].comments.length.toString(),
-                          style: const TextStyle(color: Colors.white70),
-                        ),
-                      ),
-                    );
+                    return PostCard(post: value.posts[index]);
                   },
                   itemCount: value.posts.length,
                 ),

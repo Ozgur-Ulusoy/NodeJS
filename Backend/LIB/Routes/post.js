@@ -115,7 +115,7 @@ router.get('/getRandomPostByCount', async (req, res, next) => {
 });
 
 //! Get Post by Title and Limit (default limit is 5)
-router.get('/getPostByTitle', async (req, res, next) => {
+router.get('/getPostsByTitle', async (req, res, next) => {
     console.log('an attempt to get a post by title was made');
     // const {title, limit} = req.params;
     const title = req.headers.title;
