@@ -4,6 +4,7 @@ import 'package:worldflow/Data/Consts/AppConstants.dart';
 import 'package:worldflow/Data/Managers/InternetManager.dart';
 import 'package:worldflow/Data/StateManagement/SearchPageState.dart';
 import 'package:worldflow/Data/Widgets/PostCard.dart';
+import 'package:worldflow/Data/screenUtil.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -39,13 +40,18 @@ class _SearchPageState extends State<SearchPage> {
       body: SafeArea(
         child: Column(
           children: [
-            SearchBar(
-              controller: searchController,
-              onChanged: (value) async {
-                var datas = await InternetManager.searchPosts(value);
-                Provider.of<SearchPageState>(context, listen: false)
-                    .setPosts(datas);
-              },
+            SizedBox(height: ScreenUtil.height * 0.01),
+            Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: ScreenUtil.width * 0.02),
+              child: SearchBar(
+                controller: searchController,
+                onChanged: (value) async {
+                  var datas = await InternetManager.searchPosts(value);
+                  Provider.of<SearchPageState>(context, listen: false)
+                      .setPosts(datas);
+                },
+              ),
             ),
             Consumer<SearchPageState>(
               builder: (context, value, widget) => Expanded(

@@ -121,6 +121,35 @@ class InternetManager {
   }
 
   //! Post API
+
+  //! Create Post
+  static Future<Post?> createPost(
+      {required String title,
+      required String content,
+      required String ownerid,
+      required String token}) async {
+    String url = '${_postUrl}create';
+
+    try {
+      Response response = await dio.post(
+        url,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'token': token,
+            'title': title,
+            'content': content,
+            'ownerid': ownerid,
+          },
+        ),
+      );
+      return Post.fromJson(response.data['post']);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   static Future<List<Post>> getRandomPosts(int count) async {
     String url = '${_postUrl}getRandomPostByCount';
 

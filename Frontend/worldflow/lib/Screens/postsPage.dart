@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:loadmore/loadmore.dart';
 import 'package:provider/provider.dart';
+import 'package:worldflow/Data/Consts/LocalDatabaseConstants.dart';
+import 'package:worldflow/Data/Managers/HiveManager.dart';
 import 'package:worldflow/Data/Managers/InternetManager.dart';
+import 'package:worldflow/Data/Models/LocalDatabaseModels/UserModel.dart';
+import 'package:worldflow/Data/Models/post.dart';
 import 'package:worldflow/Data/StateManagement/PostsPageState.dart';
 import 'package:worldflow/Data/Widgets/LoadMoreDelegete.dart';
 import 'package:worldflow/Data/Widgets/PostCard.dart';
+import 'package:worldflow/Data/screenUtil.dart';
 
 import '../Data/Consts/AppConstants.dart';
 
@@ -36,6 +41,78 @@ class _PostsPageState extends State<PostsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.white,
+        foregroundColor: AppConsts.backgroundColor,
+        onPressed: () {
+          // getFirstPage();
+          // showdialog
+          showDialog(
+            context: context,
+            builder: (context) {
+              TextEditingController titleController = TextEditingController();
+              TextEditingController contentController = TextEditingController();
+
+              return Dialog(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: ScreenUtil.height * 0.01),
+                    // title and content textfield and button
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: ScreenUtil.width * 0.02),
+                      child: TextField(
+                        controller: titleController,
+                        maxLength: 60,
+                        decoration: const InputDecoration(
+                          hintText: 'Title',
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: ScreenUtil.height * 0.01),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: ScreenUtil.width * 0.02),
+                      child: TextField(
+                        controller: contentController,
+                        maxLength: 999,
+                        decoration: const InputDecoration(
+                          hintText: 'Content',
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: ScreenUtil.height * 0.01),
+
+                    ElevatedButton(
+                      onPressed: () async {
+                        UserModel user = await HiveGlobal.instance
+                            .getData(LocalDatabaseConstants.USER);
+
+                        Post? post = await InternetManager.createPost(
+                          title: titleController.text,
+                          content: contentController.text,
+                          ownerid: user.id,
+                          token: user.token,
+                        );
+                        if (post != null) {
+                          Provider.of<PostsPageState>(context, listen: false)
+                              .addPost(post);
+                        }
+                        // await getFirstPage();
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Post'),
+                    ),
+                    SizedBox(height: ScreenUtil.height * 0.01),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       backgroundColor: AppConsts.backgroundColor,
       body: Center(
         child: Consumer<PostsPageState>(

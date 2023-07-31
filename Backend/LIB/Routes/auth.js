@@ -77,15 +77,19 @@ router.post('/sendVerifyEmail', async (req, res, next) => {
 router.get('/verifyEmail/:token', async (req, res, next) => {
     var result = await VerifyEmail(req.params.token);
     if(result.success) {
-        res.status(200).json({
-            success: result['success'],
-            message: result['message'],
-        });
+        // res.status(200).json({
+        //     success: result['success'],
+        //     message: result['message'],
+        // });
+
+        // return html page with success message
+        res.send('<h1>Success</h1><p>Your email has been verified</p>')
     }
     else {
-        res.status(500).json({
-            message: result['message'],
-        });
+        // res.status(500).json({
+        //     message: result['message'],
+        // });
+        res.send('<h1>Error</h1><p>Your email could not be verified</p>')
     }
 });
 
@@ -121,14 +125,16 @@ router.get('/resetPassword/:token', async (req, res, next) => {
 
     var result = await ResetPassword(req.params.token);
     if(result) {
-        res.status(200).json({
-            message: 'Password reset successfully',
-        });
+        // res.status(200).json({
+        //     message: 'Password reset successfully',
+        // });
+        res.send('<h1>Success</h1><p>Your password has been reset</p>')
     }
     else {
-        res.status(500).json({
-            message: 'Error',
-        });
+        // res.status(500).json({
+        //     message: 'Error',
+        // });
+        res.send('<h1>Error</h1><p>Your password could not be reset</p>')
     }
 });
 
