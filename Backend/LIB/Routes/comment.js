@@ -84,7 +84,7 @@ router.get('/getReply', async (req, res, next) => {
         res.status(200).json({
             message: 'Reply retrieved successfully',
             totalLength : result['totalLength'],
-            replies: result['replies'],
+            comments: result['comments'],
         });
     }
     else {

@@ -24,7 +24,7 @@ const CommentSchema = mongoose.Schema({
             default: [],
             },
         },
-    replies: { //! REPLIES OF COMMENT
+    comments: { //! REPLIES OF COMMENT
         type: Array,
         default: [],
         // minimalize : true,

@@ -1,4 +1,6 @@
 class Comment {
+  // String commentid;
+  String? commentid;
   String content;
   String ownerId;
   String createdAt;
@@ -7,6 +9,7 @@ class Comment {
   List<Comment?> comments;
 
   Comment({
+    required this.commentid,
     required this.content,
     required this.ownerId,
     required this.createdAt,
@@ -23,7 +26,8 @@ class Comment {
     if (json['comments'] == null) {
       // print('comments is null');
     } else {
-      var tempComments = json['comments'] as List<dynamic>;
+      var tempComments =
+          json['comments'] == null ? [] : json['comments'] as List<dynamic>;
       comments = tempComments.map((e) => Comment.fromJson(e)).toList();
     }
 
@@ -34,6 +38,7 @@ class Comment {
     dislikes = tempDislikes.map((e) => e.toString()).toList();
 
     return Comment(
+      commentid: json['_id'],
       content: json['content'],
       ownerId: json['ownerId'],
       createdAt: json['time'],

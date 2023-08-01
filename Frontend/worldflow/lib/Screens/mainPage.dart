@@ -23,12 +23,17 @@ class _MainPageState extends State<MainPage> {
     UserModel? user =
         await HiveGlobal.instance.getData(LocalDatabaseConstants.USER);
 
-    if (user != null && await InternetManager.checkSession(user.token)) {
-      return const HomePage();
-    } else {
-      // await Navigator.pushNamed(context, '/login');
-      print('user is null or session is expired');
-      await HiveGlobal.instance.deleteData(LocalDatabaseConstants.USER);
+    try {
+      if (user != null && await InternetManager.checkSession(user.token)) {
+        return const HomePage();
+      } else {
+        // await Navigator.pushNamed(context, '/login');
+        print('user is null or session is expired');
+        await HiveGlobal.instance.deleteData(LocalDatabaseConstants.USER);
+        return const LoginPage();
+      }
+    } catch (e) {
+      print(e);
       return const LoginPage();
     }
   }

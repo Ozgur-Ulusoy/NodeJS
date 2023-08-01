@@ -60,11 +60,11 @@ const replyComment = async (postId, commentId, content, ownerId, token) => {
     const newComment = new Comment({
         content: content,
         ownerId: new mongoose.Types.ObjectId(ownerId),
-        replies: null,
+        comments: null,
     });
 
     // add comment to post
-    var res = await dbClient.db('DB').collection('Posts').updateOne({_id: new mongoose.Types.ObjectId(postId), 'comments._id': new mongoose.Types.ObjectId(commentId)}, {$addToSet: {'comments.$.replies': newComment}}).then((val) => {
+    var res = await dbClient.db('DB').collection('Posts').updateOne({_id: new mongoose.Types.ObjectId(postId), 'comments._id': new mongoose.Types.ObjectId(commentId)}, {$addToSet: {'comments.$.comments': newComment}}).then((val) => {
         return val.acknowledged;
     }); // is added to db;
     return {
@@ -99,10 +99,10 @@ const getReply = async (postId, commentId, limit = 5) => {
     // get replies by post id and comment id
     const replies = await dbClient.db('DB').collection('Posts').findOne({_id: new mongoose.Types.ObjectId(postId), 'comments._id': new mongoose.Types.ObjectId(commentId)}, {projection: {_id: 0, 'comments.$': 1}}).then((val) => {
         // get all replies
-        var totalLength = val.comments[0].replies.length;
-        var reply = val.comments[0].replies.slice(0, limit);
+        var totalLength = val.comments[0].comments.length;
+        var reply = val.comments[0].comments.slice(0, limit);
         return {
-            replies: reply,
+            comments: reply,
             totalLength: totalLength,
         };
     });
@@ -213,8 +213,8 @@ const interactWithReply = async (postId, commentId, replyId, userId, interaction
     }
 
     // get the object of the reply - reply is under replies array in the comment and has the same id as the replyId
-    var reply = await dbClient.db('DB').collection('Posts').findOne({_id: new mongoose.Types.ObjectId(postId), 'comments._id': new mongoose.Types.ObjectId(commentId), 'comments.replies._id': new mongoose.Types.ObjectId(replyId)}, {projection: {_id: 0, 'comments.$': 1}}).then((val) => {
-        return val.comments[0].replies.filter((reply) => {
+    var reply = await dbClient.db('DB').collection('Posts').findOne({_id: new mongoose.Types.ObjectId(postId), 'comments._id': new mongoose.Types.ObjectId(commentId), 'comments.comments._id': new mongoose.Types.ObjectId(replyId)}, {projection: {_id: 0, 'comments.$': 1}}).then((val) => {
+        return val.comments[0].comments.filter((reply) => {
             return reply._id.toString() === replyId.toString();
         })[0];
     });
@@ -296,7 +296,7 @@ const interactWithReply = async (postId, commentId, replyId, userId, interaction
     // console.log(newInteractions);
 
     // update reply
-    var res = await dbClient.db('DB').collection('Posts').updateOne({_id: new mongoose.Types.ObjectId(postId), 'comments._id': new mongoose.Types.ObjectId(commentId), 'comments.replies._id': new mongoose.Types.ObjectId(replyId)}, {$set: {'comments.$.replies.$[i].interactions': newInteractions}}, {arrayFilters: [{'i._id': new mongoose.Types.ObjectId(replyId)}]}).then((val) => {
+    var res = await dbClient.db('DB').collection('Posts').updateOne({_id: new mongoose.Types.ObjectId(postId), 'comments._id': new mongoose.Types.ObjectId(commentId), 'comments.comments._id': new mongoose.Types.ObjectId(replyId)}, {$set: {'comments.$.comments.$[i].interactions': newInteractions}}, {arrayFilters: [{'i._id': new mongoose.Types.ObjectId(replyId)}]}).then((val) => {
         return val.acknowledged;
     });
 
