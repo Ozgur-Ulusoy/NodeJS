@@ -6,14 +6,18 @@ const PostSchema = mongoose.Schema({
         type: String,
         required: true,
         },  
-    content: { //! CONTENT OF POST
-        type: String,
-        minlength: 10,
-        required: true,
-        },  
+    // content: { //! CONTENT OF POST
+    //     type: String,
+    //     minlength: 10,
+    //     required: true,
+    //     },  
     ownerId : { //! ID OF USER WHO MADE THE POST
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
+        required: true,
+        },
+    ownerName : { //! NAME OF USER WHO MADE THE POST
+        type: String,
         required: true,
         },
     time : { //! TIME OF POST CREATION

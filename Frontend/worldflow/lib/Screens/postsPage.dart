@@ -27,16 +27,17 @@ class _PostsPageState extends State<PostsPage> {
     super.initState();
     // after build
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      getFirstPage();
+      // getFirstPage();
+      Provider.of<PostsPageState>(context, listen: false).getFirstPage();
     });
   }
 
-  Future<void> getFirstPage() async {
-    await Provider.of<PostsPageState>(context, listen: false).reset();
-    await InternetManager.getPostsByPage(0).then((value) {
-      Provider.of<PostsPageState>(context, listen: false).addPosts(value);
-    });
-  }
+  // Future<void> getFirstPage() async {
+  //   await Provider.of<PostsPageState>(context, listen: false).reset();
+  //   await InternetManager.getPostsByPage(0).then((value) {
+  //     Provider.of<PostsPageState>(context, listen: false).addPosts(value);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +122,10 @@ class _PostsPageState extends State<PostsPage> {
               semanticsLabel: 'Refresh',
               onRefresh: () {
                 value.clearPosts();
-                return getFirstPage();
+                // return getFirstPage();
+                return Provider.of<PostsPageState>(context, listen: false)
+                    .getFirstPage();
+
                 // return value.clearPosts();
               },
               child: LoadMore(

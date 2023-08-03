@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:worldflow/Data/Consts/LocalDatabaseConstants.dart';
 import 'package:worldflow/Data/Managers/HiveManager.dart';
 import 'package:worldflow/Data/Models/LocalDatabaseModels/UserModel.dart';
 import 'package:worldflow/Data/Models/post.dart';
+import 'package:worldflow/Data/StateManagement/PostPage.dart';
 import 'package:worldflow/Data/screenUtil.dart';
 import 'package:worldflow/Screens/postPage.dart';
 
@@ -28,6 +30,16 @@ class _PostCardState extends State<PostCard> {
         // print(widget.post.content);
         // print(widget.post.id);
         // print(widget.post.ownerId);
+
+        Provider.of<PostPageState>(context, listen: false).reset();
+
+        Provider.of<PostPageState>(context, listen: false).setPost(
+          widget.post,
+        );
+
+        Provider.of<PostPageState>(context, listen: false).addComments(
+          widget.post.comments,
+        );
         Navigator.push(
           context,
           MaterialPageRoute(

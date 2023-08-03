@@ -3,7 +3,8 @@ class Comment {
   String? commentid;
   String content;
   String ownerId;
-  String createdAt;
+  String ownerName;
+  DateTime createdAt;
   List<String> likes;
   List<String> dislikes;
   List<Comment?> comments;
@@ -12,6 +13,7 @@ class Comment {
     required this.commentid,
     required this.content,
     required this.ownerId,
+    required this.ownerName,
     required this.createdAt,
     required this.likes,
     required this.dislikes,
@@ -41,7 +43,8 @@ class Comment {
       commentid: json['_id'],
       content: json['content'],
       ownerId: json['ownerId'],
-      createdAt: json['time'],
+      ownerName: json['ownerName'],
+      createdAt: DateTime.parse(json['time']),
       likes: likes,
       dislikes: dislikes,
       comments: comments,

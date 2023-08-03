@@ -3,18 +3,18 @@ import 'comment.dart';
 class Post {
   String id;
   String title;
-  String content;
   String ownerId;
+  String ownerName;
   List<Comment> comments;
   List<String> likes;
   List<String> dislikes;
-  String createdAt;
+  DateTime createdAt;
 
   Post({
     required this.id,
     required this.title,
-    required this.content,
     required this.ownerId,
+    required this.ownerName,
     required this.comments,
     required this.likes,
     required this.dislikes,
@@ -41,12 +41,14 @@ class Post {
     return Post(
       id: json['_id'],
       title: json['title'],
-      content: json['content'],
       ownerId: json['ownerId'],
+      ownerName: json['ownerName'],
       comments: comments,
       likes: likes,
       dislikes: dislikes,
-      createdAt: json['time'],
+      // convert string to DateTime
+      createdAt: DateTime.parse(json['time']),
+      // createdAt: json['time'],
     );
   }
 }

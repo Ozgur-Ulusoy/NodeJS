@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const Post = require('../Models/post');
 const dbClient = require('../db.js');
+const Comment = require('../Models/comment');
+
 
 const createPost = async (title, content, ownerId, token) => {
 
@@ -25,9 +27,16 @@ const createPost = async (title, content, ownerId, token) => {
     
     const newPost = new Post({
         title: title,
+        ownerId: new mongoose.Types.ObjectId(ownerId),
+        ownerName: user.username,
+    });
+
+    const newComment = new Comment({
         content: content,
         ownerId: new mongoose.Types.ObjectId(ownerId),
+        ownerName: user.username,
     });
+    newPost.comments.push(newComment);
 
     
 

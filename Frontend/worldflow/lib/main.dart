@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:worldflow/Data/StateManagement/HomePageState.dart';
+import 'package:worldflow/Data/StateManagement/PostPage.dart';
 import 'package:worldflow/Data/StateManagement/SearchPageState.dart';
 import 'package:worldflow/Screens/homePage.dart';
 import 'package:worldflow/Screens/loginPage.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => HomePageProvider()),
         ChangeNotifierProvider(create: (context) => PostsPageState()),
         ChangeNotifierProvider(create: (context) => SearchPageState()),
+        ChangeNotifierProvider(create: (context) => PostPageState()),
       ],
       child: MaterialApp(
         title: 'WorldFlow',

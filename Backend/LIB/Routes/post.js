@@ -6,12 +6,12 @@ const {createPost, getPostById, getRandomPostByCount, getPostByTitle, interactWi
 //! Create a post
 router.post('/create', async (req, res, next) => {
     console.log('an attempt to create a post was made');
-    const title = req.headers.title;
-    const content = req.headers.content;
-    const ownerid = req.headers.ownerid;
-    const token = req.headers.token;
-    console.log(title, content, ownerid, token);
-    var result = await createPost(title, content, ownerid, token);
+    // const title = req.body.title;
+    // const content = req.body.content;
+    // const ownerid = req.headers.ownerid;
+    // const token = req.headers.token;
+    // console.log(title, content, ownerid, token);
+    var result = await createPost(req.body.title, req.body.content, req.headers.ownerid, req.headers.token);
     console.log(result);
     if(result.success) {
         res.status(200).json({
@@ -118,10 +118,10 @@ router.get('/getRandomPostByCount', async (req, res, next) => {
 router.get('/getPostsByTitle', async (req, res, next) => {
     console.log('an attempt to get a post by title was made');
     // const {title, limit} = req.params;
-    const title = req.headers.title;
-    const limit = req.headers.limit;
+    // const title = req.body.title;
+    // const limit = req.headers.limit;
 
-    var result = await getPostByTitle(title, limit);
+    var result = await getPostByTitle(req.body.title, req.headers.limit);
     if (result) {
         res.status(200).json({
             message: 'Post retrieved successfully',

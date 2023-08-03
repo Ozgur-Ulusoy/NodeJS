@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:worldflow/Data/Managers/InternetManager.dart';
 import 'package:worldflow/Data/Models/post.dart';
 
 class PostsPageState extends ChangeNotifier {
@@ -11,6 +12,14 @@ class PostsPageState extends ChangeNotifier {
     page = 0;
     posts.clear();
     isFinish = false;
+    notifyListeners();
+  }
+
+  Future<void> getFirstPage() async {
+    await reset();
+    await InternetManager.getPostsByPage(0).then((value) {
+      addPosts(value);
+    });
     notifyListeners();
   }
 

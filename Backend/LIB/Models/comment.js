@@ -10,6 +10,10 @@ const CommentSchema = mongoose.Schema({
         ref: 'User',
         required: true,
         },
+    ownerName : { //! NAME OF USER WHO MADE THE COMMENT
+        type: String,
+        required: true,
+        },
     time : { //! TIME OF COMMENT
         type: Date,
         default: Date.now,
@@ -24,13 +28,13 @@ const CommentSchema = mongoose.Schema({
             default: [],
             },
         },
-    comments: { //! REPLIES OF COMMENT
-        type: Array,
-        default: [],
-        // minimalize : true,
-        // $unset: { $cond: { if: { $eq: [ "$replies", null ] }, then: "$$PRUNE", else: "$$KEEP" }
-        // }
-    },
+    // comments: { //! REPLIES OF COMMENT
+    //     type: Array,
+    //     default: [],
+    //     // minimalize : true,
+    //     // $unset: { $cond: { if: { $eq: [ "$replies", null ] }, then: "$$PRUNE", else: "$$KEEP" }
+    //     // }
+    // },
 });
 
 const Comment = mongoose.model('Comment', CommentSchema);

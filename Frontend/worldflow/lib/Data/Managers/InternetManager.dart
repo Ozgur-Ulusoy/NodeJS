@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:worldflow/Data/Models/comment.dart';
 import 'package:worldflow/Data/Models/post.dart';
 import 'package:worldflow/Data/Models/user.dart';
 
@@ -12,6 +13,7 @@ class InternetManager {
   static const String _baseUrl = 'http://10.0.2.2:3000/api/';
   static const String _authUrl = '${_baseUrl}auth/';
   static const String _postUrl = '${_baseUrl}post/';
+  static const String _commentUrl = '${_baseUrl}comment/';
 
   //! Auth API
   static Future<User?> login(
@@ -133,12 +135,14 @@ class InternetManager {
     try {
       Response response = await dio.post(
         url,
+        data: {
+          'title': title,
+          'content': content,
+        },
         options: Options(
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8',
             'token': token,
-            'title': title,
-            'content': content,
             'ownerid': ownerid,
           },
         ),
@@ -211,10 +215,12 @@ class InternetManager {
     try {
       Response response = await dio.get(
         url,
+        data: {
+          'title': title,
+        },
         options: Options(
           headers: {
             'Content-Type': 'application/json',
-            'title': title,
             'limit': 15,
           },
         ),
@@ -229,6 +235,78 @@ class InternetManager {
     } catch (e) {
       print(e);
       return [];
+    }
+  }
+
+  //! Comment API
+
+  //! create comment
+  static Future<Comment?> createComment(
+      String postid, content, ownerid, token) async {
+    //
+    String url = '${_commentUrl}create';
+
+    // POST request
+    try {
+      Response response = await dio.post(
+        url,
+        data: {
+          'content': content,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+            'postid': postid,
+            'ownerid': ownerid,
+            'token': token,
+          },
+        ),
+      );
+      return Comment.fromJson(response.data['comment']);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  //! interact with comment
+  static Future<Map<String, dynamic>> interactCommment(
+    String postid,
+    commentid,
+    userid,
+    type,
+    token,
+  ) async {
+    //
+    String url = '${_commentUrl}interact';
+
+    // POST request
+    try {
+      Response response = await dio.post(
+        url,
+        options: Options(
+          // utf8 charset
+          headers: {
+            'Content-Type': 'application/json;charset=UTF-8',
+            // 'Content-Type: text/html; charset=utf-8'
+            'postid': postid,
+            'commentid': commentid,
+            'userid': userid,
+            'type': type,
+            'token': token,
+          },
+
+          // responseType: ResponseType.plain,
+          // responseDecoder: (responseBytes, options, responseBody) => utf8
+          //     .decode(responseBytes) // default was utf8.decode(responseBytes)
+          // .toString(),
+        ),
+      );
+
+      return response.data['interactions'];
+    } catch (e) {
+      print(e);
+      return {};
     }
   }
 }
