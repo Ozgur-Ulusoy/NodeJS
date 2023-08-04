@@ -5,12 +5,14 @@ import 'package:worldflow/Data/Managers/HiveManager.dart';
 import 'package:worldflow/Data/Models/LocalDatabaseModels/UserModel.dart';
 import 'package:worldflow/Data/Models/post.dart';
 import 'package:worldflow/Data/StateManagement/PostPage.dart';
+import 'package:worldflow/Data/StateManagement/PostsPageState.dart';
 import 'package:worldflow/Data/screenUtil.dart';
 import 'package:worldflow/Screens/postPage.dart';
 
 class PostCard extends StatefulWidget {
-  Post post;
-  PostCard({super.key, required this.post});
+  // Post post;
+  int index;
+  PostCard({super.key, required this.index});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -19,12 +21,13 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
+    Post post = Provider.of<PostsPageState>(context, listen: true).posts[widget.index];
     return GestureDetector(
       onTap: () async {
-        UserModel user = await HiveGlobal.instance
-            .getData(LocalDatabaseConstants.USER) as UserModel;
+        // UserModel user = await HiveGlobal.instance
+        //     .getData(LocalDatabaseConstants.USER) as UserModel;
 
-        print(user.token);
+        // print(user.token);
         // print(widget.post.comments.length);
         // print(widget.post.title);
         // print(widget.post.content);
@@ -34,16 +37,16 @@ class _PostCardState extends State<PostCard> {
         Provider.of<PostPageState>(context, listen: false).reset();
 
         Provider.of<PostPageState>(context, listen: false).setPost(
-          widget.post,
+          post,
         );
 
         Provider.of<PostPageState>(context, listen: false).addComments(
-          widget.post.comments,
+          post.comments,
         );
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PostPage(post: widget.post),
+            builder: (context) => PostPage(post: post),
           ),
         );
       },
@@ -52,11 +55,11 @@ class _PostCardState extends State<PostCard> {
         alignment: Alignment.center,
         child: ListTile(
           title: Text(
-            widget.post.title,
+            post.title,
             style: const TextStyle(color: Colors.white),
           ),
           trailing: Text(
-            widget.post.comments.length.toString(),
+            post.comments.length.toString(),
             style: const TextStyle(color: Colors.white70),
           ),
         ),

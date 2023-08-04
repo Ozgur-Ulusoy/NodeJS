@@ -60,7 +60,7 @@ class _SearchPageState extends State<SearchPage> {
                   itemBuilder: (context, index) {
                     // return PostCard(
                     //   post: snapshot.data![index],
-                    return PostCard(post: value.posts[index]);
+                    return PostCard(index: index);
                   },
                 ),
               ),

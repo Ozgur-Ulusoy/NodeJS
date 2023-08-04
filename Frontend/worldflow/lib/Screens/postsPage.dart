@@ -170,7 +170,7 @@ class _PostsPageState extends State<PostsPage> {
                 child: ListView.separated(
                   separatorBuilder: (context, index) => const Divider(),
                   itemBuilder: (BuildContext context, int index) {
-                    return PostCard(post: value.posts[index]);
+                    return PostCard(index: index);
                   },
                   itemCount: value.posts.length,
                 ),

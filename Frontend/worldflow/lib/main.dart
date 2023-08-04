@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => PostPageState()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'WorldFlow',
         theme: ThemeData(
           primarySwatch: Colors.blue,

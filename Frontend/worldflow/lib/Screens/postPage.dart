@@ -42,8 +42,10 @@ class _PostPageState extends State<PostPage> {
     // }
     return WillPopScope(
       onWillPop: () async {
-        await Provider.of<PostsPageState>(context, listen: false)
-            .getFirstPage();
+        // await Provider.of<PostsPageState>(context, listen: false)
+        //     .getFirstPage();
+        Provider.of<PostsPageState>(context, listen: false).updatePost( Provider.of<PostPageState>(context, listen: false).post!);
+        print('object');
         return true;
       },
       child: Scaffold(
@@ -51,7 +53,11 @@ class _PostPageState extends State<PostPage> {
         appBar: AppBar(
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+                Provider.of<PostsPageState>(context, listen: false).updatePost( Provider.of<PostPageState>(context, listen: false).post!);
+                Navigator.of(context).pop();
+                print('object');
+            } 
           ),
           title: Text(
             widget.post.title,
@@ -96,6 +102,7 @@ class _PostPageState extends State<PostPage> {
                           if (comment != null) {
                             Provider.of<PostPageState>(context, listen: false)
                                 .addComment(comment);
+                        
                           }
                           Navigator.of(context).pop();
                         },

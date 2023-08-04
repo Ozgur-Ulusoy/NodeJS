@@ -62,6 +62,22 @@ class _CommentCardState extends State<CommentCard> {
                 IconButton(
                   onPressed: () async {
                     //ıı
+                     UserModel user = await HiveGlobal.instance
+                        .getData(LocalDatabaseConstants.USER) as UserModel;
+
+                    Map<String, dynamic> res =
+                        await InternetManager.interactCommment(
+                            Provider.of<PostPageState>(context, listen: false)
+                                .post!
+                                .id,
+                            widget.comment.commentid,
+                            user.id,
+                            'dislike',
+                            user.token);
+                    if (res != {}) {
+                      Provider.of<PostPageState>(context, listen: false)
+                          .updateComment(widget.comment.commentid!, res);
+                    }
                   },
                   icon: const Icon(Icons.thumb_down),
                 ),

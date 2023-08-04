@@ -23,6 +23,16 @@ class PostsPageState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updatePost(Post post) async{
+    print(post.comments.length);
+      for (var i = 0; i < posts.length; i++) {
+        if (posts[i].id == post.id){
+          posts[i] = post;
+        }
+      }
+      notifyListeners();
+  }
+
   void setIsFinish(bool newIsFinish) {
     isFinish = newIsFinish;
     notifyListeners();
