@@ -32,7 +32,6 @@ flutter run
 base url = https://worldflow.azurewebsites.net/api/
 
 <h3>  Auth İşlemleri - auth/ </h3>
-<br/>
 /login post işlemi => verilen req.headers.username,req.headers.email, req.headers.password ile kullanıcı girişini sağlar eğer böyle bir hesap yoksa yeni bir hesap açar
 /logout post işlemi => verilen req.headers.token ile giriş yapmış olan kullanıcının oturumunu keser
 /checkSession get işlemi => verilen req.headers.token'a bakarak kullanıcının oturumu sona ermiş mi yoksa devam ediyor mu diye kontrol eder
@@ -40,8 +39,8 @@ base url = https://worldflow.azurewebsites.net/api/
 /verifyEmail/:token get işlemi => verilen req.params.token ile bu tokene ait kullanıcının emailini doğrular
 /sendResetPasswordEmail post işlemi => verilen req.headers.email, req.headers.password ile şifre değiştirme emaili gönderir
 /resetPassword/:token get işlemi => verilen req.params.token ait kullanıcının şifresini değiştirme isteğini kabul eder
-
 <br/>
+
 <h3> Comment İşlemleri - comment/ </h3>
 /create post işlemi => verilen req.headers.postid, req.body.content, req.headers.ownerid, req.headers.token ile ilgili posta yorum oluşturur
 /getComment get işlemi => verilen req.headers.postid, req.headers.limit ile istenilen posta ait istenilen limitte yorumları verir
