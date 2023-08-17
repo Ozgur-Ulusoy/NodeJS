@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:worldflow/Data/Models/comment.dart';
 import 'package:worldflow/Data/Models/post.dart';
-import 'package:worldflow/Data/StateManagement/PostsPageState.dart';
 
 class PostPageState extends ChangeNotifier {
   int page = 0;
+  int postPerPage = 10;
 
   Post? post;
   List<Comment> comments = [];
+
+  void SetPagePerPage(int index) {
+    page = (index / postPerPage).toInt();
+    notifyListeners();
+  }
+
+  int returnCommentsPageLength() {
+    return (comments.length / postPerPage).toInt();
+  }
 
   Future<void> reset() async {
     page = 0;
@@ -23,7 +32,7 @@ class PostPageState extends ChangeNotifier {
     Comment comment =
         comments.firstWhere((element) => element.commentid == commentid);
     comment.likes = List<String>.from(map['likes'] as List);
-    
+
     comment.dislikes = List<String>.from(map['dislikes'] as List);
     notifyListeners();
   }
@@ -40,7 +49,7 @@ class PostPageState extends ChangeNotifier {
 
   void addComment(Comment newComment) {
     comments.add(newComment);
-    if(post != null){
+    if (post != null) {
       post!.comments.add(newComment);
     }
     notifyListeners();

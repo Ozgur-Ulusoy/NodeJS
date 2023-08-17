@@ -10,7 +10,7 @@ class InternetManager {
   InternetManager._internal();
   static final Dio dio = Dio();
 
-  static const String _baseUrl = 'http://10.0.2.2:3000/api/';
+  static const String _baseUrl = 'https://worldflow.azurewebsites.net/api/';
   static const String _authUrl = '${_baseUrl}auth/';
   static const String _postUrl = '${_baseUrl}post/';
   static const String _commentUrl = '${_baseUrl}comment/';

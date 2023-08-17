@@ -99,8 +99,8 @@ router.get('/getPostsByPage', async (req, res, next) => {
 router.get('/getRandomPostByCount', async (req, res, next) => {
     console.log('an attempt to get a random post by count was made');
     // const {count} = req.params;
-    const count = req.headers.count;
-    var result = await getRandomPostByCount(count);
+    // const count = req.headers.count;
+    var result = await getRandomPostByCount( req.headers.count);
     if (result) {
         res.status(200).json({
             message: 'Post retrieved successfully',
@@ -138,12 +138,12 @@ router.get('/getPostsByTitle', async (req, res, next) => {
 router.post('/interaction', async (req, res, next) => {
     console.log('an attempt to interact with a post was made');
     // const {postId, ownerId, type} = req.params;
-    const postid = req.headers.postid;
-    const ownerid = req.headers.ownerid;
-    const type = req.headers.type;
-    const token = req.headers.token;
+    // const postid = req.headers.postid;
+    // const ownerid = req.headers.ownerid;
+    // const type = req.headers.type;
+    // const token = req.headers.token;
 
-    var result = await interactWithPost(postid, ownerid, type, token);
+    var result = await interactWithPost(req.headers.postid, req.headers.ownerid, req.headers.type, req.headers.token);
     console.log(result);
     if (result.success) {
         res.status(200).json({

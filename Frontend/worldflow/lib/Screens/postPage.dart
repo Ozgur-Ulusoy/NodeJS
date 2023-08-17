@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:worldflow/Data/Consts/AppConstants.dart';
 import 'package:worldflow/Data/Consts/LocalDatabaseConstants.dart';
 import 'package:worldflow/Data/Managers/HiveManager.dart';
@@ -13,6 +14,7 @@ import 'package:worldflow/Data/screenUtil.dart';
 
 import '../Data/Models/comment.dart';
 
+// ignore: must_be_immutable
 class PostPage extends StatefulWidget {
   Post post;
   PostPage({super.key, required this.post});
@@ -22,29 +24,22 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
+  ScrollController controller = ScrollController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // print('---------------------------------');
-    // print('${widget.post.id} post id');
-    // print('-');
-    // print('${widget.post.comments.length} comments length');
-    // for (var item in widget.post.comments) {
-    //   print('${item.commentid} comment id');
-    //   print('${item.content} comment content');
-    //   print('${item.ownerId} comment owner id');
-    //   print('${item.comments.length} comment comments length');
-    //   for (var item2 in item.comments) {
-    //     print('a');
-    //     print(item2?.commentid ?? 'commentid null');
-    //     print(item2?.content);
-    //     print(item2?.comments.length);
-    //   }
-    // }
     return WillPopScope(
       onWillPop: () async {
         // await Provider.of<PostsPageState>(context, listen: false)
         //     .getFirstPage();
-        Provider.of<PostsPageState>(context, listen: false).updatePost( Provider.of<PostPageState>(context, listen: false).post!);
+        Provider.of<PostsPageState>(context, listen: false).updatePost(
+            Provider.of<PostPageState>(context, listen: false).post!);
         print('object');
         return true;
       },
@@ -52,13 +47,13 @@ class _PostPageState extends State<PostPage> {
         // appbar with left arrow back button
         appBar: AppBar(
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-                Provider.of<PostsPageState>(context, listen: false).updatePost( Provider.of<PostPageState>(context, listen: false).post!);
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Provider.of<PostsPageState>(context, listen: false).updatePost(
+                    Provider.of<PostPageState>(context, listen: false).post!);
                 Navigator.of(context).pop();
                 print('object');
-            } 
-          ),
+              }),
           title: Text(
             widget.post.title,
             maxLines: 2,
@@ -68,9 +63,7 @@ class _PostPageState extends State<PostPage> {
           backgroundColor: Colors.white,
           foregroundColor: AppConsts.backgroundColor,
           onPressed: () async {
-            //ıı
             // SHOW DIALOG
-
             showDialog(
                 context: context,
                 builder: (context) {
@@ -102,7 +95,6 @@ class _PostPageState extends State<PostPage> {
                           if (comment != null) {
                             Provider.of<PostPageState>(context, listen: false)
                                 .addComment(comment);
-                        
                           }
                           Navigator.of(context).pop();
                         },
@@ -117,18 +109,76 @@ class _PostPageState extends State<PostPage> {
         backgroundColor: AppConsts.backgroundColor,
         body: SafeArea(
           child: CustomScrollView(
+            controller: controller,
             slivers: [
-              const SliverAppBar(
+              SliverAppBar(
                 pinned: true,
+                centerTitle: true,
                 leading: SizedBox(),
+                title: Row(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // button to go to the up
+                    IconButton(
+                      onPressed: () {
+                        controller.animateTo(
+                          controller.position.minScrollExtent,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.arrow_upward,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Consumer<PostPageState>(
+                      builder: (context, state, child) {
+                        return Text(
+                          'Page ' + (state.page + 1).toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        );
+                      },
+                    ),
+                    // button to go to the down
+                    IconButton(
+                      onPressed: () {
+                        controller.animateTo(
+                          controller.position.maxScrollExtent,
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.ease,
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.arrow_downward,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               SliverToBoxAdapter(
                 child: ListView.separated(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  itemBuilder: (context, index) => CommentCard(
-                      comment:
-                          Provider.of<PostPageState>(context).comments[index]),
+                  itemBuilder: (context, index) {
+                    // print offsest of the index item
+
+                    return VisibilityDetector(
+                      key: Key(index.toString()),
+                      onVisibilityChanged: (VisibilityInfo info) {
+                        if (info.visibleFraction == 1)
+                          Provider.of<PostPageState>(context, listen: false)
+                              .SetPagePerPage(index);
+                      },
+                      child: CommentCard(
+                          comment: Provider.of<PostPageState>(context)
+                              .comments[index]),
+                    );
+                  },
                   separatorBuilder: (context, index) => const Divider(),
                   itemCount:
                       Provider.of<PostPageState>(context).comments.length,

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:worldflow/Data/Managers/UserManager.dart';
 
 import '../Consts/LocalDatabaseConstants.dart';
 import '../Models/LocalDatabaseModels/UserModel.dart';
@@ -39,6 +40,10 @@ class HiveGlobal {
       LocalDatabaseConstants.DATABASE_NAME,
       encryptionCipher: HiveAesCipher(encryptionKey),
     );
+    String? id = (await getData(LocalDatabaseConstants.USER))?.id;
+    if (id != null) {
+      UserManager().Id = id;
+    }
 
     print("Hive Initiated");
   }

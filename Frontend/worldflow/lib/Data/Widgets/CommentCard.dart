@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:worldflow/Data/Consts/LocalDatabaseConstants.dart';
 import 'package:worldflow/Data/Managers/HiveManager.dart';
 import 'package:worldflow/Data/Managers/InternetManager.dart';
+import 'package:worldflow/Data/Managers/UserManager.dart';
 import 'package:worldflow/Data/Models/LocalDatabaseModels/UserModel.dart';
 import 'package:worldflow/Data/Models/comment.dart';
 import 'package:worldflow/Data/StateManagement/PostPage.dart';
@@ -50,7 +51,9 @@ class _CommentCardState extends State<CommentCard> {
                           .updateComment(widget.comment.commentid!, res);
                     }
                   },
-                  icon: const Icon(Icons.thumb_up),
+                  icon: Icon(widget.comment.likes.contains(UserManager().Id)
+                      ? Icons.thumb_up
+                      : Icons.thumb_up_outlined),
                 ),
                 Text(
                   widget.comment.likes.length.toString(),
@@ -62,7 +65,7 @@ class _CommentCardState extends State<CommentCard> {
                 IconButton(
                   onPressed: () async {
                     //ıı
-                     UserModel user = await HiveGlobal.instance
+                    UserModel user = await HiveGlobal.instance
                         .getData(LocalDatabaseConstants.USER) as UserModel;
 
                     Map<String, dynamic> res =
@@ -79,7 +82,9 @@ class _CommentCardState extends State<CommentCard> {
                           .updateComment(widget.comment.commentid!, res);
                     }
                   },
-                  icon: const Icon(Icons.thumb_down),
+                  icon: Icon(widget.comment.dislikes.contains(UserManager().Id)
+                      ? Icons.thumb_down
+                      : Icons.thumb_down_alt_outlined),
                 ),
                 Text(
                   widget.comment.dislikes.length.toString(),

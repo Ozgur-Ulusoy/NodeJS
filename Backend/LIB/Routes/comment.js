@@ -52,11 +52,11 @@ router.post('/create', async (req, res, next) => {
 //! Get Comment by post id - Limit to x
 router.get('/getComment', async (req, res, next) => {
     console.log('an attempt to get a comment was made with limit');
-    // const {postId, limit} = req.params;
-    const postid = req.headers.postid;
-    const limit = req.headers.limit;
+    // // const {postId, limit} = req.params;
+    // const postid = req.headers.postid;
+    // const limit = req.headers.limit;
 
-    var result = await getComment(postid, limit);
+    var result = await getComment(req.headers.postid, req.headers.limit);
     if(result) {
         res.status(200).json({
             message: 'Comment retrieved successfully',
@@ -98,12 +98,12 @@ router.get('/getComment', async (req, res, next) => {
 router.post('/interact', async (req, res, next) => {
     console.log('an attempt to interact with a comment was made');
     // const {postId, commentId, userId, type} = req.params;
-    const postid = req.headers.postid;
-    const commentid = req.headers.commentid;
-    const userid = req.headers.userid;
-    const type = req.headers.type;
-    const token = req.headers.token;
-    var result = await interactWithComment(postid, commentid, userid, type, token);
+    // const postid = req.headers.postid;
+    // const commentid = req.headers.commentid;
+    // const userid = req.headers.userid;
+    // const type = req.headers.type;
+    // const token = req.headers.token;
+    var result = await interactWithComment(req.headers.postid, req.headers.commentid, req.headers.userid, req.headers.type,  req.headers.token);
 
     if(result.success) {
         res.status(200).json({

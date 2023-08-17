@@ -50,6 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                   width: ScreenUtil.width * 0.8,
                   child: TextField(
                     controller: _usernameController,
+                    textInputAction: TextInputAction.next,
                     decoration: const InputDecoration(
                       hintText: 'Username',
                       hintStyle: TextStyle(
@@ -77,6 +78,7 @@ class _LoginPageState extends State<LoginPage> {
                   width: ScreenUtil.width * 0.8,
                   child: TextField(
                     controller: _emailController,
+                    textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.emailAddress,
                     decoration: const InputDecoration(
                       hintText: 'Email',
@@ -106,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: TextField(
                     controller: _passwordController,
                     obscureText: true,
+                    textInputAction: TextInputAction.done,
                     decoration: const InputDecoration(
                       hintText: 'Password',
                       hintStyle: TextStyle(
