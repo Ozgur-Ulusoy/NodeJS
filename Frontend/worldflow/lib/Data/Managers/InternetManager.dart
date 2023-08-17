@@ -231,6 +231,7 @@ class InternetManager {
       response.data['posts'].forEach((post) {
         if (post != null) posts.add(Post.fromJson(post));
       });
+      print(posts[0].title);
       return posts;
     } catch (e) {
       print(e);

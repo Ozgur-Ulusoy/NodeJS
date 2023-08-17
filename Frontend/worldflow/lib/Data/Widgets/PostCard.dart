@@ -11,8 +11,8 @@ import 'package:worldflow/Screens/postPage.dart';
 
 class PostCard extends StatefulWidget {
   // Post post;
-  int index;
-  PostCard({super.key, required this.index});
+  Post post;
+  PostCard({super.key, required this.post});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -21,7 +21,7 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
-    Post post = Provider.of<PostsPageState>(context, listen: true).posts[widget.index];
+    Post post = widget.post;
     return GestureDetector(
       onTap: () async {
         // UserModel user = await HiveGlobal.instance

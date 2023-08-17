@@ -87,6 +87,18 @@ class _PostsPageState extends State<PostsPage> {
 
                     ElevatedButton(
                       onPressed: () async {
+                        if (contentController.text.isEmpty ||
+                            titleController.text.isEmpty) {
+                          // show error
+                          ScaffoldMessenger.of(context)
+                            ..removeCurrentSnackBar()
+                            ..showSnackBar(
+                              const SnackBar(
+                                content: Text('Please fill all fields'),
+                              ),
+                            );
+                          return;
+                        }
                         UserModel user = await HiveGlobal.instance
                             .getData(LocalDatabaseConstants.USER);
 
@@ -100,6 +112,7 @@ class _PostsPageState extends State<PostsPage> {
                           Provider.of<PostsPageState>(context, listen: false)
                               .addPost(post);
                         }
+
                         // await getFirstPage();
                         Navigator.pop(context);
                       },
@@ -170,7 +183,8 @@ class _PostsPageState extends State<PostsPage> {
                 child: ListView.separated(
                   separatorBuilder: (context, index) => const Divider(),
                   itemBuilder: (BuildContext context, int index) {
-                    return PostCard(index: index);
+                    Post post = value.posts[index];
+                    return PostCard(post: post);
                   },
                   itemCount: value.posts.length,
                 ),

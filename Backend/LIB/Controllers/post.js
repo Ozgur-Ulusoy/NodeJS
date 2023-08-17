@@ -147,7 +147,7 @@ const interactWithPost = async (postId, userId, interaction, token) => {
     };
 };
 
-const getPostCount = async () => {
+const   getPostCount = async () => {
     const count = await dbClient.db('DB').collection('Posts').countDocuments();
     return count;
 };

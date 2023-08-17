@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:worldflow/Data/Consts/AppConstants.dart';
 import 'package:worldflow/Data/Managers/InternetManager.dart';
+import 'package:worldflow/Data/Models/post.dart';
 import 'package:worldflow/Data/StateManagement/SearchPageState.dart';
 import 'package:worldflow/Data/Widgets/PostCard.dart';
 import 'package:worldflow/Data/screenUtil.dart';
@@ -48,6 +49,9 @@ class _SearchPageState extends State<SearchPage> {
                 controller: searchController,
                 onChanged: (value) async {
                   var datas = await InternetManager.searchPosts(value);
+                  for (var element in datas) {
+                    print(element.title);
+                  }
                   Provider.of<SearchPageState>(context, listen: false)
                       .setPosts(datas);
                 },
@@ -58,9 +62,8 @@ class _SearchPageState extends State<SearchPage> {
                 child: ListView.builder(
                   itemCount: value.posts.length,
                   itemBuilder: (context, index) {
-                    // return PostCard(
-                    //   post: snapshot.data![index],
-                    return PostCard(index: index);
+                    Post post = value.posts[index];
+                    return PostCard(post: post);
                   },
                 ),
               ),

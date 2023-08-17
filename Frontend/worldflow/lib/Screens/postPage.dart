@@ -90,11 +90,19 @@ class _PostPageState extends State<PostPage> {
                                   controller.text,
                                   user.id,
                                   user.token);
-                          print(comment);
+                          // print(comment);
 
                           if (comment != null) {
                             Provider.of<PostPageState>(context, listen: false)
                                 .addComment(comment);
+                          } else {
+                            ScaffoldMessenger.of(context)
+                              ..removeCurrentSnackBar()
+                              ..showSnackBar( 
+                                const SnackBar(
+                                  content: Text('Please Enter a Comment'),
+                                ),
+                              );
                           }
                           Navigator.of(context).pop();
                         },
