@@ -6,6 +6,8 @@ Geliştirdiğim uygulamada Ekşi Sözlük tarzı bir blog uygulaması yapılmas�
 Mobile App Development - Flutter <br/> 
 Backend - NodeJS & ExpressJS <br/>
 Database : MongoDB <br/>
+Cloud : Azure <br/>
+
 <br/>
 <img src='https://github.com/Ozgur-Ulusoy/WorldFlow/assets/88507880/623b83c3-7fde-444e-93e5-21e4f8477991' width='500'>
 <img src='https://github.com/Ozgur-Ulusoy/WorldFlow/assets/88507880/2df1fff6-7204-4723-9614-5324134dc1d8' width='500'>
