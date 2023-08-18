@@ -3,10 +3,7 @@ const router = express.Router();
 const {Login, Logout, CheckSession, SendVerifyEmail, VerifyEmail, SendResetPasswordEmail, ResetPassword, CheckEmail} = require('../Controllers/auth');
 
 router.post('/login', async (req, res, next) => { // /:username/:password
-    // const username = req.headers.username;
-    // const email = req.headers.email;
-    // const password = req.headers.password;
-    
+
     var result = await Login(req.headers.username,req.headers.email, req.headers.password);
     if(result.success) {
         res.status(200).json({
@@ -22,7 +19,6 @@ router.post('/login', async (req, res, next) => { // /:username/:password
 });
 
 router.post('/logout', async (req, res, next) => {
-    // const token = req.headers.token;
     const result = await Logout(req.headers.token);
     if(result.success) {
         res.status(200).json({
@@ -37,7 +33,6 @@ router.post('/logout', async (req, res, next) => {
 });
 
 router.get('/checkSession', async (req, res, next) => {
-    // const token = req.headers.token;
     var result = await CheckSession(req.headers.token);
     if(result.success) {
         res.status(200).json({
@@ -54,8 +49,6 @@ router.get('/checkSession', async (req, res, next) => {
 });
 
 router.post('/sendVerifyEmail', async (req, res, next) => {
-    // const email = req.headers.email;
-    // const username = req.headers.username;
 
     var result = 
     (async () => await SendVerifyEmail(req.headers.email, req.headers.username))()
@@ -121,7 +114,6 @@ router.post('/sendResetPasswordEmail', async (req, res, next) => {
 });
 
 router.get('/resetPassword/:token', async (req, res, next) => {
-    // const token = req.params.token;
 
     var result = await ResetPassword(req.params.token);
     if(result) {
